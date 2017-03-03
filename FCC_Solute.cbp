@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="FCC_Solute" />
+		<Option pch_mode="2" />
+		<Option compiler="cygwin" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/FCC_Solute" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="cygwin" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/FCC_Solute" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="cygwin" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="kmc_chosenevent.cpp" />
+		<Unit filename="kmc_chosenevent.h" />
+		<Unit filename="kmc_inputdata.cpp" />
+		<Unit filename="kmc_inputdata.h" />
+		<Unit filename="kmc_kmcsimulation.cpp" />
+		<Unit filename="kmc_kmcsimulation.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="kmc_latticesite.cpp" />
+		<Unit filename="kmc_latticesite.h" />
+		<Unit filename="kmc_logfile.cpp" />
+		<Unit filename="kmc_logfile.h" />
+		<Unit filename="kmc_movingspecies.cpp" />
+		<Unit filename="kmc_movingspecies.h" />
+		<Unit filename="kmc_rate.cpp" />
+		<Unit filename="kmc_rate.h" />
+		<Unit filename="kmc_restart.cpp" />
+		<Unit filename="kmc_restart.h" />
+		<Unit filename="kmc_simulationbox.cpp" />
+		<Unit filename="kmc_simulationbox.h" />
+		<Unit filename="kmc_snapshot.cpp" />
+		<Unit filename="kmc_snapshot.h" />
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

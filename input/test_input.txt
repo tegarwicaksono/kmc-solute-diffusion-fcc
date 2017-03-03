@@ -1,0 +1,73 @@
+Header1: The first line is ignored
+Header2: The second line is ignored
+Header3: The third line is ignored
+
+# this is how to insert a comment, i.e. start with character '#'
+
+box_length_x	20
+box_length_y	20
+box_length_z	20
+# box_length_x/y/z = number of unit cells in x/y/z direction
+
+unit_length_x	4.0
+unit_length_y	4.0
+unit_length_z	4.0
+# unit_length_x/y/z = length of a unit cell in x/y/z direction
+
+absolute_temp	300.0
+# absolute temperature is in Kelvin
+
+number_of_solute_type 	2
+#	there are 2 types of solute atoms
+
+number_of_solute_of_type	1	100
+#	means for solute type 1, there are 100 atoms
+number_of_solute_of_type	2	0
+
+pre_exp_rate_term	1	1.0e12
+#	pre exponential rate term is 1.0e12 s^-1 for solute type 1
+
+pre_exp_rate_term	2	1.0e12
+
+solute_migration_energy	1	0.1
+#	migration energy for solute type 1 = 0.1 eV
+
+solute_migration_energy	2	0.2	
+
+effective_interaction_distance	first
+#	"first" ==> interaction only considers first nearest neighbour
+#	in this simulation, the available options are only: "first", "second", "third"
+#	so, if want to consider up to 2nd nearest neighbour distance, type:
+#	effective_interaction_distance	second
+
+solute_solute_interaction_energy	1	2	-0.5	first
+#   interaction energy between solute type 1 and 2 at a first nearest neighbour distance is -0.5 eV
+
+solute_solute_interaction_energy	1	1	-0.5	first
+solute_solute_interaction_energy	2	2	0.0		first
+
+matrix_matrix_interaction_energy	0.0		first
+#   interaction energy between matrix and matrix atom = 0.0 eV
+
+solute_matrix_interaction_energy	1	0.05	first
+#   interaction energy between matrix and solute type 1 is 0.05 eV
+
+solute_matrix_interaction_energy	2	0.01	first
+
+number_of_KMC_steps		10
+# total of 100,000 KMC steps will be performed
+
+dump_snapshot	5	1	2
+#   produce CFG files (readable in OVITO and AtomEye) for solute type 1 and 2 every 50 KMC steps 
+#   CFG files are stored in folder 'dump_snapshot'
+#   implicitly also, the state of simulation is produced in a logfile found 
+#	in subfolder 'log' every 50 KMC steps
+
+
+dump_restart	5
+#   produce a restart file every 100 KMC steps
+#   restart files are stored in folder 'dump_restart'
+
+#read_from_restart	300
+#   read from a restart file produced at KMC steps = 300.
+#   warning::: comment out this line if starting simulation from scratch
