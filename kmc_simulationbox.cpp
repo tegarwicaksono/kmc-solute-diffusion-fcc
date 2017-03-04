@@ -51,69 +51,69 @@ using namespace std;
 
 	vector<vector<double>> SimulationBox::atoms_in_fcc_unit_cell() {
 		vector<vector<double>> list;
-		list.emplace_back(std::initializer_list<double>{0.0,0.5,0.5});
-		list.emplace_back(std::initializer_list<double>{0.5,0.0,0.5});
-		list.emplace_back(std::initializer_list<double>{0.5,0.5,0.0});
-		list.emplace_back(std::initializer_list<double>{0.0,0.0,0.0});
+		list.push_back(std::initializer_list<double>{0.0,0.5,0.5});
+		list.push_back(std::initializer_list<double>{0.5,0.0,0.5});
+		list.push_back(std::initializer_list<double>{0.5,0.5,0.0});
+		list.push_back(std::initializer_list<double>{0.0,0.0,0.0});
 		return list;
 	}
 
 	vector<vector<double>> SimulationBox::first_nearest_neighbours_fcc() {
 		vector<vector<double>> list;
-		list.emplace_back(std::initializer_list<double>{0.0,-0.5,-0.5});	//1
-		list.emplace_back(std::initializer_list<double>{0.0,-0.5,+0.5});	//2
-		list.emplace_back(std::initializer_list<double>{0.0,0.5,-0.5});		//3
-		list.emplace_back(std::initializer_list<double>{0.0,0.5,0.5});		//4
-		list.emplace_back(std::initializer_list<double>{-0.5,0.0,-0.5});	//5
-		list.emplace_back(std::initializer_list<double>{-0.5,0.0,0.5});		//6
-		list.emplace_back(std::initializer_list<double>{0.5,0.0,-0.5});		//7
-		list.emplace_back(std::initializer_list<double>{0.5,0.0,0.5});		//8
-		list.emplace_back(std::initializer_list<double>{-0.5,-0.5,0.0});	//9
-		list.emplace_back(std::initializer_list<double>{-0.5,0.5,0.0});		//10
-		list.emplace_back(std::initializer_list<double>{0.5,-0.5,0.0});		//11
-		list.emplace_back(std::initializer_list<double>{0.5,0.5,0.0});		//12
+		list.push_back(std::initializer_list<double>{0.0,-0.5,-0.5});	//1
+		list.push_back(std::initializer_list<double>{0.0,-0.5,+0.5});	//2
+		list.push_back(std::initializer_list<double>{0.0,0.5,-0.5});		//3
+		list.push_back(std::initializer_list<double>{0.0,0.5,0.5});		//4
+		list.push_back(std::initializer_list<double>{-0.5,0.0,-0.5});	//5
+		list.push_back(std::initializer_list<double>{-0.5,0.0,0.5});		//6
+		list.push_back(std::initializer_list<double>{0.5,0.0,-0.5});		//7
+		list.push_back(std::initializer_list<double>{0.5,0.0,0.5});		//8
+		list.push_back(std::initializer_list<double>{-0.5,-0.5,0.0});	//9
+		list.push_back(std::initializer_list<double>{-0.5,0.5,0.0});		//10
+		list.push_back(std::initializer_list<double>{0.5,-0.5,0.0});		//11
+		list.push_back(std::initializer_list<double>{0.5,0.5,0.0});		//12
 		return list;
 	}
 
 	vector<vector<double>> SimulationBox::second_nearest_neighbours_fcc() {
 		vector<vector<double>> list;
-		list.emplace_back(std::initializer_list<double>{-1.0,0.0,0.0});	//1
-		list.emplace_back(std::initializer_list<double>{1.0,0.0,0.0});	//2
-		list.emplace_back(std::initializer_list<double>{0.0,-1.0,0.0});	//3
-		list.emplace_back(std::initializer_list<double>{0.0,1.0,0.0});	//4
-		list.emplace_back(std::initializer_list<double>{0.0,0.0,-1.0});	//5
-		list.emplace_back(std::initializer_list<double>{0.0,0.0,1.0});	//6
+		list.push_back(std::initializer_list<double>{-1.0,0.0,0.0});	//1
+		list.push_back(std::initializer_list<double>{1.0,0.0,0.0});	//2
+		list.push_back(std::initializer_list<double>{0.0,-1.0,0.0});	//3
+		list.push_back(std::initializer_list<double>{0.0,1.0,0.0});	//4
+		list.push_back(std::initializer_list<double>{0.0,0.0,-1.0});	//5
+		list.push_back(std::initializer_list<double>{0.0,0.0,1.0});	//6
 		return list;
 	}
 
 	vector<vector<double>> SimulationBox::third_nearest_neighbours_fcc() {
         vector<vector<double>> list;
-		list.emplace_back(std::initializer_list<double>{-0.5,-0.5,-1.0});   //1
-		list.emplace_back(std::initializer_list<double>{-0.5,-0.5,1.0});    //2
-		list.emplace_back(std::initializer_list<double>{-0.5,0.5,-1.0});    //3
-		list.emplace_back(std::initializer_list<double>{-0.5,0.5,1.0});     //4
-		list.emplace_back(std::initializer_list<double>{0.5,-0.5,-1.0});    //5
-		list.emplace_back(std::initializer_list<double>{0.5,-0.5,1.0});     //6
-		list.emplace_back(std::initializer_list<double>{0.5,0.5,-1.0});     //7
-		list.emplace_back(std::initializer_list<double>{0.5,0.5,1.0});      //8
+		list.push_back(std::initializer_list<double>{-0.5,-0.5,-1.0});   //1
+		list.push_back(std::initializer_list<double>{-0.5,-0.5,1.0});    //2
+		list.push_back(std::initializer_list<double>{-0.5,0.5,-1.0});    //3
+		list.push_back(std::initializer_list<double>{-0.5,0.5,1.0});     //4
+		list.push_back(std::initializer_list<double>{0.5,-0.5,-1.0});    //5
+		list.push_back(std::initializer_list<double>{0.5,-0.5,1.0});     //6
+		list.push_back(std::initializer_list<double>{0.5,0.5,-1.0});     //7
+		list.push_back(std::initializer_list<double>{0.5,0.5,1.0});      //8
 
-		list.emplace_back(std::initializer_list<double>{-0.5,-1.0,-0.5});   //9
-		list.emplace_back(std::initializer_list<double>{-0.5,-1.0,0.5});    //10
-		list.emplace_back(std::initializer_list<double>{-0.5,1.0,-0.5});    //11
-		list.emplace_back(std::initializer_list<double>{-0.5,1.0,0.5});     //12
-		list.emplace_back(std::initializer_list<double>{0.5,-1.0,-0.5});    //13
-		list.emplace_back(std::initializer_list<double>{0.5,-1.0,0.5});     //14
-		list.emplace_back(std::initializer_list<double>{0.5,1.0,-0.5});     //15
-		list.emplace_back(std::initializer_list<double>{0.5,1.0,0.5});      //16
+		list.push_back(std::initializer_list<double>{-0.5,-1.0,-0.5});   //9
+		list.push_back(std::initializer_list<double>{-0.5,-1.0,0.5});    //10
+		list.push_back(std::initializer_list<double>{-0.5,1.0,-0.5});    //11
+		list.push_back(std::initializer_list<double>{-0.5,1.0,0.5});     //12
+		list.push_back(std::initializer_list<double>{0.5,-1.0,-0.5});    //13
+		list.push_back(std::initializer_list<double>{0.5,-1.0,0.5});     //14
+		list.push_back(std::initializer_list<double>{0.5,1.0,-0.5});     //15
+		list.push_back(std::initializer_list<double>{0.5,1.0,0.5});      //16
 
-		list.emplace_back(std::initializer_list<double>{-1.0,-0.5,-0.5});   //17
-		list.emplace_back(std::initializer_list<double>{-1.0,-0.5,0.5});    //18
-		list.emplace_back(std::initializer_list<double>{-1.0,0.5,-0.5});    //19
-		list.emplace_back(std::initializer_list<double>{-1.0,0.5,0.5});     //20
-		list.emplace_back(std::initializer_list<double>{1.0,-0.5,-0.5});    //21
-		list.emplace_back(std::initializer_list<double>{1.0,-0.5,0.5});     //22
-		list.emplace_back(std::initializer_list<double>{1.0,0.5,-0.5});     //23
-		list.emplace_back(std::initializer_list<double>{1.0,0.5,0.5});      //24
+		list.push_back(std::initializer_list<double>{-1.0,-0.5,-0.5});   //17
+		list.push_back(std::initializer_list<double>{-1.0,-0.5,0.5});    //18
+		list.push_back(std::initializer_list<double>{-1.0,0.5,-0.5});    //19
+		list.push_back(std::initializer_list<double>{-1.0,0.5,0.5});     //20
+		list.push_back(std::initializer_list<double>{1.0,-0.5,-0.5});    //21
+		list.push_back(std::initializer_list<double>{1.0,-0.5,0.5});     //22
+		list.push_back(std::initializer_list<double>{1.0,0.5,-0.5});     //23
+		list.push_back(std::initializer_list<double>{1.0,0.5,0.5});      //24
 
         return list;
 	}
@@ -128,7 +128,7 @@ using namespace std;
 						vector<double> xyz({coor[0] + static_cast<double>(i),
 											coor[1] + static_cast<double>(j),
 											coor[2] + static_cast<double>(k)});
-						lattice_sites.emplace_back(LatticeSite(latt_id++, xyz));
+						lattice_sites.push_back(LatticeSite(latt_id++, xyz));
 					}
 				}
 			}
@@ -154,7 +154,7 @@ using namespace std;
 
 				neighbour_site[j] += periodic_image;
 			}
-			list.emplace_back(neighbour_site);
+			list.push_back(neighbour_site);
 		}
 
 		return list;
@@ -163,21 +163,21 @@ using namespace std;
 	void SimulationBox::assign_1nn_fcc_per_site(LatticeSite &site, const vector<vector<double>> &neighbours) {
 		vector<vector<double>> nn1s = find_nn_per_site(site, neighbours);
 		for (const vector<double> &nn1 : nn1s) {
-			site.first_nn.emplace_back(find_latt_id_fcc(nn1));
+			site.first_nn.push_back(find_latt_id_fcc(nn1));
 		}
 	}
 
 	void SimulationBox::assign_2nn_fcc_per_site(LatticeSite &site, const vector<vector<double>> &neighbours) {
 		vector<vector<double>> nn2s = find_nn_per_site(site, neighbours);
 		for (const vector<double> &nn2 : nn2s) {
-			site.second_nn.emplace_back(find_latt_id_fcc(nn2));
+			site.second_nn.push_back(find_latt_id_fcc(nn2));
 		}
 	}
 
     void SimulationBox::assign_3nn_fcc_per_site(LatticeSite &site, const vector<vector<double>> &neighbours) {
 		vector<vector<double>> nn3s = find_nn_per_site(site, neighbours);
 		for (const vector<double> &nn3 : nn3s) {
-			site.third_nn.emplace_back(find_latt_id_fcc(nn3));
+			site.third_nn.push_back(find_latt_id_fcc(nn3));
 		}
 	}
 
@@ -271,7 +271,7 @@ using namespace std;
 
 				occupied_sites.insert(site_for_solute);
 				lattice_sites[site_for_solute].occupant = count;
-				solutes.emplace_back(MovingSpecies(i + 1, count, &lattice_sites[site_for_solute]));
+				solutes.push_back(MovingSpecies(i + 1, count, &lattice_sites[site_for_solute]));
 				solutes[count].update_next_locations();
 				++count;
 			}
@@ -293,7 +293,7 @@ using namespace std;
 		for (size_t i = 0; i < input->number_of_solute_per_type.size(); ++i) {
 			for (int j = 0; j < input->number_of_solute_per_type[i]; ++j) {
 				inputfile >> sol_type >> sol_id >> curr_location_id;
-				solutes.emplace_back(MovingSpecies(sol_type, sol_id, &lattice_sites[curr_location_id]));
+				solutes.push_back(MovingSpecies(sol_type, sol_id, &lattice_sites[curr_location_id]));
 				solutes[sol_id].update_next_locations();
 			}
 		}
@@ -364,7 +364,7 @@ using namespace std;
 			solutes[i].current_energy = calculate_energy(solutes[i].curr_location, solutes[i].type);
 			for (size_t j = 0; j < solutes[i].next_locations.size(); ++j) {
 				bool is_identical;
-				solutes[i].next_energies.emplace_back(calculate_energy(solutes[i].next_locations[j], solutes[i].curr_location, solutes[i].type, is_identical));
+				solutes[i].next_energies.push_back(calculate_energy(solutes[i].next_locations[j], solutes[i].curr_location, solutes[i].type, is_identical));
 
 				//calculate migration energy
 				double migration_energy = input->e_migrate[solutes[i].type];
@@ -373,7 +373,8 @@ using namespace std;
 				//calculate event rate
 				double event_rate = input->rate_factor*input->solute_rate[solutes[i].type]*exp(-1.0*migration_energy);
 				if (is_identical) event_rate *= flag_for_identical_swap;
-				solutes[i].rates.emplace_back(event_rate);
+
+				solutes[i].rates.push_back(event_rate);
 			}
 		}
 	}

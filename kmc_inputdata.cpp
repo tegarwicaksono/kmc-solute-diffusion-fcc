@@ -10,6 +10,7 @@
 #include <string>
 #include <fstream>
 #include <iomanip>
+#include <limits>
 
 using namespace std;
 
@@ -27,25 +28,25 @@ using namespace std;
 	}
 
 	void InputData::assign_parameter_name() {
-		parameter_name.emplace_back("box_length_x");	//in unit cell //0
-		parameter_name.emplace_back("box_length_y");	//in unit cell //1
-		parameter_name.emplace_back("box_length_z");	//in unit cell //2
-		parameter_name.emplace_back("unit_length_x");	//in angstrom  //3
-		parameter_name.emplace_back("unit_length_y");	//in angstrom  //4
-		parameter_name.emplace_back("unit_length_z");	//in angstrom  //5
-		parameter_name.emplace_back("absolute_temp");	//in kelvin    //6
-		parameter_name.emplace_back("number_of_solute_type");		   //7
-		parameter_name.emplace_back("number_of_solute_of_type"); //8	//format: number_of_solute_of_type 1 10
-		parameter_name.emplace_back("pre_exp_rate_term"); //9 //in second^-1
-		parameter_name.emplace_back("solute_migration_energy"); //10 //in eV
-		parameter_name.emplace_back("solute_solute_interaction_energy"); //11 //in eV, format: solute_solute_interaction_energy 1 2 0.5
-		parameter_name.emplace_back("matrix_matrix_interaction_energy"); //12 //in eV
-		parameter_name.emplace_back("solute_matrix_interaction_energy"); //13 //in eV
-		parameter_name.emplace_back("number_of_KMC_steps"); //14
-		parameter_name.emplace_back("dump_snapshot");	//15
-		parameter_name.emplace_back("dump_restart");	//16
-		parameter_name.emplace_back("read_from_restart"); //17
-		parameter_name.emplace_back("effective_interaction_distance"); //18
+		parameter_name.push_back("box_length_x");	//in unit cell //0
+		parameter_name.push_back("box_length_y");	//in unit cell //1
+		parameter_name.push_back("box_length_z");	//in unit cell //2
+		parameter_name.push_back("unit_length_x");	//in angstrom  //3
+		parameter_name.push_back("unit_length_y");	//in angstrom  //4
+		parameter_name.push_back("unit_length_z");	//in angstrom  //5
+		parameter_name.push_back("absolute_temp");	//in kelvin    //6
+		parameter_name.push_back("number_of_solute_type");		   //7
+		parameter_name.push_back("number_of_solute_of_type"); //8	//format: number_of_solute_of_type 1 10
+		parameter_name.push_back("pre_exp_rate_term"); //9 //in second^-1
+		parameter_name.push_back("solute_migration_energy"); //10 //in eV
+		parameter_name.push_back("solute_solute_interaction_energy"); //11 //in eV, format: solute_solute_interaction_energy 1 2 0.5
+		parameter_name.push_back("matrix_matrix_interaction_energy"); //12 //in eV
+		parameter_name.push_back("solute_matrix_interaction_energy"); //13 //in eV
+		parameter_name.push_back("number_of_KMC_steps"); //14
+		parameter_name.push_back("dump_snapshot");	//15
+		parameter_name.push_back("dump_restart");	//16
+		parameter_name.push_back("read_from_restart"); //17
+		parameter_name.push_back("effective_interaction_distance"); //18
 	}
 
 	vector<string> InputData::split_token(const string &input) {
@@ -55,7 +56,7 @@ using namespace std;
 		vector<string> tokens;
 		for (; it != reg_end; ++it) {
 			if (it->str().size() > 0) {
-				tokens.emplace_back(it->str());
+				tokens.push_back(it->str());
 			}
 		}
 		return tokens;
@@ -78,8 +79,8 @@ using namespace std;
 			//assigning space for the vectors of solute/matrix properties
 			number_of_solute_per_type.assign(number_of_solute_type, int());
 
-			species_interaction_energy.assign(number_of_solute_type + 1, vector<vector<double>>(number_of_solute_type + 1, vector<double>(4, 0.0)));
-			e_species.assign(number_of_solute_type + 1, vector<vector<double>>(number_of_solute_type + 1, vector<double>(4, 0.0)));
+			species_interaction_energy.assign(number_of_solute_type + 1, vector<vector<double> >(number_of_solute_type + 1, vector<double>(4, 0.0)));
+			e_species.assign(number_of_solute_type + 1, vector<vector<double> >(number_of_solute_type + 1, vector<double>(4, 0.0)));
 			rate_pre_exponential.assign(number_of_solute_type + 1, double());
 			solute_rate.assign(number_of_solute_type + 1, double());
 			solute_migration_energy.assign(number_of_solute_type + 1, double());
@@ -344,7 +345,14 @@ using namespace std;
 		}
 
 		solute_rate = rate_pre_exponential;
-		rate_factor = *std::min_element(rate_pre_exponential.begin() + 1, rate_pre_exponential.end());
+
+		rate_factor = std::numeric_limits<double>::max();
+
+		for (size_t i = 1; i < rate_pre_exponential.size(); ++i) {
+            if (rate_pre_exponential[i] > 0.0 && rate_factor > rate_pre_exponential[i]) {
+                rate_factor = rate_pre_exponential[i];
+            }
+		}
 
 		for (size_t i = 0; i < solute_rate.size(); ++i) {
 			solute_rate[i] /= rate_factor;

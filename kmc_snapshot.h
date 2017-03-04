@@ -30,7 +30,7 @@ public:
 	Snapshot();
 	void initialize(SimulationBox* const &kmc_box);
 	void update(const unsigned long long int &step);
-	void create_folder_for_snapshot();
+	//void create_folder_for_snapshot();
 	void assign_solute_snapshot_properties();
 	void tabulate_species_to_dump();
 	void produce_snapshot(const unsigned long long int &step);

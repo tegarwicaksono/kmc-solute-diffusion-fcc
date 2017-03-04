@@ -27,7 +27,7 @@ using namespace std;
 		//cout << "There are " << sb->solutes.size() << " number of solutes\n";
 		for (size_t i = 0; i < kmc_box->solutes.size(); ++i) {
 			for (size_t j = 0; j < kmc_box->solutes[i].rates.size(); ++j) {
-				rates.emplace_back(Rate(&kmc_box->solutes[i], j));
+				rates.push_back(Rate(&kmc_box->solutes[i], j));
 			}
 		}
 
@@ -74,6 +74,15 @@ using namespace std;
 				total_rate += kmc_box->solutes[i].rates[j];
 				rates[count++].cumulative = total_rate;
 			}
+		}
+
+		if (total_rate == 0.0) {
+            cout << "==============================" << endl;
+            cout << "!!!!!!!!!!!!WARNING!!!!!!!!!!!" << endl;
+            cout << "!!EACH EVENT HAS A ZERO RATE!!" << endl;
+            cout << "!KMC DOES NOT KNOW WHAT TO DO!" << endl;
+            cout << "SUGGESTION:  MODIFY INPUT FILE" << endl;
+            cout << "==============================" << endl;
 		}
 	}
 

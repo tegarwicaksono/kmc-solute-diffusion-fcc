@@ -21,7 +21,7 @@ public:
 	Restart();
 
 	void initialize(SimulationBox* const &kmc_box);
-	void create_folder_for_restart();
+//	void create_folder_for_restart();
 	void update(const unsigned long long int &step, const double &current_time);
 	void produce_restart(const unsigned long long int &step, const double &current_time);
 	string pad_zeros(const unsigned long long int &step);

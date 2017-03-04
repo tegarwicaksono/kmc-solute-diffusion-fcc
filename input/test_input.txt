@@ -12,7 +12,7 @@ box_length_z	20
 unit_length_x	4.0
 unit_length_y	4.0
 unit_length_z	4.0
-# unit_length_x/y/z = length of a unit cell in x/y/z direction
+# unit_length_x/y/z = length of a unit cell in x/y/z direction in Angstrom
 
 absolute_temp	300.0
 # absolute temperature is in Kelvin
@@ -22,9 +22,9 @@ number_of_solute_type 	2
 
 number_of_solute_of_type	1	100
 #	means for solute type 1, there are 100 atoms
-number_of_solute_of_type	2	0
+number_of_solute_of_type	2	1
 
-pre_exp_rate_term	1	1.0e12
+pre_exp_rate_term	1	0.0
 #	pre exponential rate term is 1.0e12 s^-1 for solute type 1
 
 pre_exp_rate_term	2	1.0e12

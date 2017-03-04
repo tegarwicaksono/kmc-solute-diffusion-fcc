@@ -5,7 +5,8 @@
 
 #include "kmc_logfile.h"
 #include "kmc_simulationbox.h"
-#include <windows.h>
+//#include <windows.h>
+#include <sstream>
 #include <iostream>
 
 using namespace std;
@@ -13,7 +14,7 @@ using namespace std;
     void Logfile::assign_box(SimulationBox* const &sb) {
         kmc_box = sb;
     }
-
+/*
     void Logfile::create_folder_for_logfile() {
  		if (CreateDirectory(folder_name.c_str(), NULL)) {
 		} else if (ERROR_ALREADY_EXISTS == GetLastError()) {
@@ -21,17 +22,17 @@ using namespace std;
 		    cout << "can not create log folder for some reason\n";
 		}
     }
-
+*/
     void Logfile::create_logfile_header() {
 		string output_name = "./" + folder_name + "/" + "log.kmc_simulation.from.step" + to_string(kmc_box->input->initial_timestep) + ".to.step" + to_string(kmc_box->input->final_timestep);
   		log.open(output_name);
 
-  		log << "KMC_timestep\tTimeClock[eV]\tTotalEnergy[eV]\n";
+  		log << "KMC_timestep\tTimeClock[second]\tTotalEnergy[eV]\n";
     }
 
     void Logfile::start_logfile(SimulationBox* const &sb) {
         assign_box(sb);
-        create_folder_for_logfile();
+//        create_folder_for_logfile();
         create_logfile_header();
         build_neighbour_list();
     }
@@ -48,10 +49,10 @@ using namespace std;
             int main_id = kmc_box->lattice_sites[i].id;
             for (size_t j = 0; j < kmc_box->lattice_sites[i].first_nn.size(); ++j) {
                 if (main_id < kmc_box->lattice_sites[i].first_nn[j]->id) {
-                    neighbour_per_site.emplace_back(kmc_box->lattice_sites[i].first_nn[j]->id);
+                    neighbour_per_site.push_back(kmc_box->lattice_sites[i].first_nn[j]->id);
                 }
             }
-            neighbour_list_1nn.emplace_back(neighbour_per_site);
+            neighbour_list_1nn.push_back(neighbour_per_site);
         }
     }
 
@@ -61,10 +62,10 @@ using namespace std;
             int main_id = kmc_box->lattice_sites[i].id;
             for (size_t j = 0; j < kmc_box->lattice_sites[i].second_nn.size(); ++j) {
                 if (main_id < kmc_box->lattice_sites[i].second_nn[j]->id) {
-                    neighbour_per_site.emplace_back(kmc_box->lattice_sites[i].second_nn[j]->id);
+                    neighbour_per_site.push_back(kmc_box->lattice_sites[i].second_nn[j]->id);
                 }
             }
-            neighbour_list_2nn.emplace_back(neighbour_per_site);
+            neighbour_list_2nn.push_back(neighbour_per_site);
         }
     }
 
@@ -74,10 +75,10 @@ using namespace std;
             int main_id = kmc_box->lattice_sites[i].id;
             for (size_t j = 0; j < kmc_box->lattice_sites[i].third_nn.size(); ++j) {
                 if (main_id < kmc_box->lattice_sites[i].third_nn[j]->id) {
-                    neighbour_per_site.emplace_back(kmc_box->lattice_sites[i].third_nn[j]->id);
+                    neighbour_per_site.push_back(kmc_box->lattice_sites[i].third_nn[j]->id);
                 }
             }
-            neighbour_list_3nn.emplace_back(neighbour_per_site);
+            neighbour_list_3nn.push_back(neighbour_per_site);
         }
     }
 

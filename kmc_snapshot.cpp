@@ -4,7 +4,8 @@
 */
 
 #include "kmc_snapshot.h"
-#include <windows.h>
+//#include <windows.h>
+#include <sstream>
 #include <iostream>
 #include <iomanip>
 
@@ -14,7 +15,7 @@ using namespace std;
 
 	void Snapshot::initialize(SimulationBox* const &kmc_box) {
 		box  = kmc_box;
-		create_folder_for_snapshot();
+		//create_folder_for_snapshot();
 		assign_solute_snapshot_properties();
 		tabulate_species_to_dump();
 	}
@@ -25,6 +26,7 @@ using namespace std;
 		}
 	}
 
+	/*
 	void Snapshot::create_folder_for_snapshot() {
 		if (CreateDirectory(folder_name.c_str(), NULL)) {
 		} else if (ERROR_ALREADY_EXISTS == GetLastError()) {
@@ -32,13 +34,14 @@ using namespace std;
 		    cout << "can not create dump_snapshot folder for some reason\n";
 		}
 	}
+	*/
 
 	void Snapshot::assign_solute_snapshot_properties() {
 		vector<string> element_list{"Al","Ga","C","N","O","B","Fe","Mg","F","Ar"};
 
 		for (int i = 0; i < box->input->number_of_solute_type + 1; ++i) {
-			solute_name.emplace_back(element_list[i % element_list.size()]);
-			solute_mass.emplace_back(1.0);
+			solute_name.push_back(element_list[i % element_list.size()]);
+			solute_mass.push_back(1.0);
 		}
 
 	}
@@ -47,20 +50,20 @@ using namespace std;
 		if (box->input->include_species_in_snapshot[0]) {
 			matrix_included = true;
 			for (size_t i = 0; i < box->lattice_sites.size(); ++i) {
-				matrix_to_dump.emplace_back(&box->lattice_sites[i]);
+				matrix_to_dump.push_back(&box->lattice_sites[i]);
 			}
 			number_of_species_in_snapshot = box->lattice_sites.size();
 		} else {
 			for (size_t i = 0; i < box->solutes.size(); ++i) {
 				if (box->input->include_species_in_snapshot[box->solutes[i].type]) {
-					species_to_dump.emplace_back(&box->solutes[i]);
+					species_to_dump.push_back(&box->solutes[i]);
 					++number_of_species_in_snapshot;
 				}
 			}
 		}
 
 		for (size_t i = 0; i < box->input->box_length.size(); ++i) {
-			box_dimension.emplace_back(box->input->box_length[i]*box->input->unit_length[i]);
+			box_dimension.push_back(box->input->box_length[i]*box->input->unit_length[i]);
 		}
 	}
 

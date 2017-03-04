@@ -4,8 +4,9 @@
 */
 
 #include "kmc_restart.h"
-#include <windows.h>
+//#include <windows.h>
 #include <iostream>
+#include <sstream>
 #include <iomanip>
 
 using namespace std;
@@ -14,9 +15,9 @@ using namespace std;
 
 	void Restart::initialize(SimulationBox* const &kmc_box) {
 		box  = kmc_box;
-		create_folder_for_restart();
+//		create_folder_for_restart();
 	}
-
+/*
 	void Restart::create_folder_for_restart() {
 		if (CreateDirectory(folder_name.c_str(), NULL)) {
 		} else if (ERROR_ALREADY_EXISTS == GetLastError()) {
@@ -24,7 +25,7 @@ using namespace std;
 		    cout << "can not create dump_restart folder for some reason\n";
 		}
 	}
-
+*/
 	void Restart::update(const unsigned long long int &step, const double &current_time) {
 		if (step % box->input->period_restart == 0) {
 			produce_restart(step, current_time);

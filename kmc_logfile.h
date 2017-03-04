@@ -24,7 +24,7 @@ public:
 
     Logfile() {}
     void assign_box(SimulationBox* const &sb);
-    void create_folder_for_logfile();
+//    void create_folder_for_logfile();
     void create_logfile_header();
     void start_logfile(SimulationBox* const &sb);
     void update(const unsigned long long int &step, const double &current_time);

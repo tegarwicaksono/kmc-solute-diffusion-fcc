@@ -21,8 +21,8 @@ public:
 	vector<int> number_of_solute_per_type;
 
 	vector<double> nn_distance;
-	vector<vector<vector<double>>>	species_interaction_energy;	//in eV
-	vector<vector<vector<double>>>  e_species;	//species_interaction_energy/kT
+	vector<vector<vector<double> > >  species_interaction_energy;	//in eV
+	vector<vector<vector<double> > >  e_species;	//species_interaction_energy/kT
 	//species[0] = matrix;
 	//species[1] = solute 1;
 	//species[2] = solute 2;
