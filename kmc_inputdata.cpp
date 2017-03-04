@@ -5,6 +5,7 @@
 
 #include "kmc_inputdata.h"
 #include <iostream>
+#include <sstream>
 #include <cmath>
 #include <regex>
 #include <string>

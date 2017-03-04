@@ -6,6 +6,7 @@
 #include "kmc_restart.h"
 #include "kmc_simulationbox.h"
 #include <cmath>
+#include <sstream>
 #include <iomanip>
 #include <iostream>
 #include <functional>
