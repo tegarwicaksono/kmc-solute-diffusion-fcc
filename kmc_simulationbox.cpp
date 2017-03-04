@@ -50,8 +50,8 @@ using namespace std;
 		return &lattice_sites[base];
 	}
 
-	vector<vector<double>> SimulationBox::atoms_in_fcc_unit_cell() {
-		vector<vector<double>> list;
+	vector<vector<double> > SimulationBox::atoms_in_fcc_unit_cell() {
+		vector<vector<double> > list;
 		list.push_back(std::initializer_list<double>{0.0,0.5,0.5});
 		list.push_back(std::initializer_list<double>{0.5,0.0,0.5});
 		list.push_back(std::initializer_list<double>{0.5,0.5,0.0});
@@ -59,8 +59,8 @@ using namespace std;
 		return list;
 	}
 
-	vector<vector<double>> SimulationBox::first_nearest_neighbours_fcc() {
-		vector<vector<double>> list;
+	vector<vector<double> > SimulationBox::first_nearest_neighbours_fcc() {
+		vector<vector<double> > list;
 		list.push_back(std::initializer_list<double>{0.0,-0.5,-0.5});	//1
 		list.push_back(std::initializer_list<double>{0.0,-0.5,+0.5});	//2
 		list.push_back(std::initializer_list<double>{0.0,0.5,-0.5});		//3
@@ -76,8 +76,8 @@ using namespace std;
 		return list;
 	}
 
-	vector<vector<double>> SimulationBox::second_nearest_neighbours_fcc() {
-		vector<vector<double>> list;
+	vector<vector<double> > SimulationBox::second_nearest_neighbours_fcc() {
+		vector<vector<double> > list;
 		list.push_back(std::initializer_list<double>{-1.0,0.0,0.0});	//1
 		list.push_back(std::initializer_list<double>{1.0,0.0,0.0});	//2
 		list.push_back(std::initializer_list<double>{0.0,-1.0,0.0});	//3
@@ -87,8 +87,8 @@ using namespace std;
 		return list;
 	}
 
-	vector<vector<double>> SimulationBox::third_nearest_neighbours_fcc() {
-        vector<vector<double>> list;
+	vector<vector<double> > SimulationBox::third_nearest_neighbours_fcc() {
+        vector<vector<double> > list;
 		list.push_back(std::initializer_list<double>{-0.5,-0.5,-1.0});   //1
 		list.push_back(std::initializer_list<double>{-0.5,-0.5,1.0});    //2
 		list.push_back(std::initializer_list<double>{-0.5,0.5,-1.0});    //3
@@ -117,6 +117,58 @@ using namespace std;
 		list.push_back(std::initializer_list<double>{1.0,0.5,0.5});      //24
 
         return list;
+	}
+
+	vector<vector<double> > SimulationBox::fourth_nearest_neighbours_fcc() {
+        vector<vector<double> > list;
+		list.push_back(std::initializer_list<double>{0.0,-1.0,-1.0});	//1
+		list.push_back(std::initializer_list<double>{0.0,-1.0,+1.0});	//2
+		list.push_back(std::initializer_list<double>{0.0,1.0,-1.0});	//3
+		list.push_back(std::initializer_list<double>{0.0,1.0,1.0});		//4
+
+		list.push_back(std::initializer_list<double>{-1.0,0.0,-1.0});	//5
+		list.push_back(std::initializer_list<double>{-1.0,0.0,1.0});	//6
+		list.push_back(std::initializer_list<double>{1.0,0.0,-1.0});	//7
+		list.push_back(std::initializer_list<double>{1.0,0.0,1.0});		//8
+
+		list.push_back(std::initializer_list<double>{-1.0,-1.0,0.0});	//9
+		list.push_back(std::initializer_list<double>{-1.0,1.0,0.0});	//10
+		list.push_back(std::initializer_list<double>{1.0,-1.0,0.0});	//11
+		list.push_back(std::initializer_list<double>{1.0,1.0,0.0});		//12
+
+		return list;
+	}
+
+	vector<vector<double > > SimulationBox::fifth_nearest_neighbours_fcc() {
+		list.push_back(std::initializer_list<double>{0.0,-0.5,-1.5});	//1
+		list.push_back(std::initializer_list<double>{0.0,-0.5,+1.5});	//2
+		list.push_back(std::initializer_list<double>{0.0,0.5,-1.5});	//3
+		list.push_back(std::initializer_list<double>{0.0,0.5,1.5});		//4
+
+		list.push_back(std::initializer_list<double>{-0.5,0.0,-1.5});	//5
+		list.push_back(std::initializer_list<double>{-0.5,0.0,1.5});	//6
+		list.push_back(std::initializer_list<double>{0.5,0.0,-1.5});	//7
+		list.push_back(std::initializer_list<double>{0.5,0.0,1.5});		//8
+
+		list.push_back(std::initializer_list<double>{-0.5,-1.5,0.0});	//9
+		list.push_back(std::initializer_list<double>{-0.5,1.5,0.0});	//10
+		list.push_back(std::initializer_list<double>{0.5,-1.5,0.0});	//11
+		list.push_back(std::initializer_list<double>{0.5,1.5,0.0});		//12
+
+		list.push_back(std::initializer_list<double>{0.0,-1.5,-0.5});	//13
+		list.push_back(std::initializer_list<double>{0.0,-1.5,+0.5});	//14
+		list.push_back(std::initializer_list<double>{0.0,1.5,-0.5});	//15
+		list.push_back(std::initializer_list<double>{0.0,1.5,0.5});		//16
+
+		list.push_back(std::initializer_list<double>{-1.5,0.0,-0.5});	//17
+		list.push_back(std::initializer_list<double>{-1.5,0.0,0.5});	//18
+		list.push_back(std::initializer_list<double>{1.5,0.0,-0.5});	//19
+		list.push_back(std::initializer_list<double>{1.5,0.0,0.5});		//20
+
+		list.push_back(std::initializer_list<double>{-1.5,-0.5,0.0});	//21
+		list.push_back(std::initializer_list<double>{-1.5,0.5,0.0});	//22
+		list.push_back(std::initializer_list<double>{1.5,-0.5,0.0});	//23
+		list.push_back(std::initializer_list<double>{1.5,0.5,0.0});		//24
 	}
 
 	void SimulationBox::generate_sites_fcc() {
@@ -182,6 +234,20 @@ using namespace std;
 		}
 	}
 
+    void SimulationBox::assign_4nn_fcc_per_site(LatticeSite &site, const vector<vector<double>> &neighbours) {
+		vector<vector<double>> nn4s = find_nn_per_site(site, neighbours);
+		for (const vector<double> &nn4 : nn4s) {
+			site.fourth_nn.push_back(find_latt_id_fcc(nn4));
+		}
+	}
+
+    void SimulationBox::assign_5nn_fcc_per_site(LatticeSite &site, const vector<vector<double>> &neighbours) {
+		vector<vector<double>> nn5s = find_nn_per_site(site, neighbours);
+		for (const vector<double> &nn5 : nn5s) {
+			site.fifth_nn.push_back(find_latt_id_fcc(nn5));
+		}
+	}
+
 	void SimulationBox::generate_first_nearest_neighbours() {
 		vector<vector<double>> nn1s = first_nearest_neighbours_fcc();
 
@@ -199,10 +265,26 @@ using namespace std;
 	}
 
 	void SimulationBox::generate_third_nearest_neighbours() {
-		vector<vector<double>> nn3s = second_nearest_neighbours_fcc();
+		vector<vector<double>> nn3s = third_nearest_neighbours_fcc();
 
 		for (size_t i = 0; i < lattice_sites.size(); ++i) {
 			assign_3nn_fcc_per_site(lattice_sites[i], nn3s);
+		}
+	}
+
+	void SimulationBox::generate_fourth_nearest_neighbours() {
+		vector<vector<double> > nn4s = fourth_nearest_neighbours_fcc();
+
+		for (size_t i = 0; i < lattice_sites.size(); ++i) {
+			assign_4nn_fcc_per_site(lattice_sites[i], nn4s);
+		}
+	}
+
+	void SimulationBox::generate_fifth_nearest_neighbours() {
+		vector<vector<double>> nn5s = fifth_nearest_neighbours_fcc();
+
+		for (size_t i = 0; i < lattice_sites.size(); ++i) {
+			assign_5nn_fcc_per_site(lattice_sites[i], nn5s);
 		}
 	}
 
@@ -210,6 +292,8 @@ using namespace std;
 		generate_first_nearest_neighbours();
 		generate_second_nearest_neighbours();
 		generate_third_nearest_neighbours();
+		generate_fourth_nearest_neighbours();
+		generate_fifth_nearest_neighbours();
 	}
 
 	void SimulationBox::print_sites_fcc() {
@@ -326,6 +410,20 @@ using namespace std;
             }
 		}
 
+		if (input->include_ngb[4]) {
+            for (size_t i = 0; i < site->fourth_nn.size(); ++i) {
+                int ngb_type = (site->fourth_nn[i]->occupant < 0) ? 0 : solutes[site->fourth_nn[i]->occupant].type;
+                total_energy += input->e_species[ref_type][ngb_type][4];
+            }
+		}
+
+		if (input->include_ngb[5]) {
+            for (size_t i = 0; i < site->fifth_nn.size(); ++i) {
+                int ngb_type = (site->fifth_nn[i]->occupant < 0) ? 0 : solutes[site->fifth_nn[i]->occupant].type;
+                total_energy += input->e_species[ref_type][ngb_type][5];
+            }
+		}
+
 		return total_energy;
 	}
 
@@ -354,6 +452,22 @@ using namespace std;
                 int occupant = (target_site->third_nn[i]->id == current_site->id) ? target_site->occupant : target_site->third_nn[i]->occupant;
                 int ngb_type = (occupant < 0) ? 0 : solutes[occupant].type;
                 total_energy += input->e_species[ref_type][ngb_type][3];
+            }
+		}
+
+		if (input->include_ngb[4]) {
+            for (size_t i = 0; i < target_site->fourth_nn.size(); ++i) {
+                int occupant = (target_site->fourth_nn[i]->id == current_site->id) ? target_site->occupant : target_site->fourth_nn[i]->occupant;
+                int ngb_type = (occupant < 0) ? 0 : solutes[occupant].type;
+                total_energy += input->e_species[ref_type][ngb_type][4];
+            }
+		}
+
+		if (input->include_ngb[5]) {
+            for (size_t i = 0; i < target_site->fifth_nn.size(); ++i) {
+                int occupant = (target_site->fifth_nn[i]->id == current_site->id) ? target_site->occupant : target_site->fifth_nn[i]->occupant;
+                int ngb_type = (occupant < 0) ? 0 : solutes[occupant].type;
+                total_energy += input->e_species[ref_type][ngb_type][5];
             }
 		}
 

@@ -18,6 +18,8 @@ public:
 	vector<LatticeSite*> first_nn;
 	vector<LatticeSite*> second_nn;
 	vector<LatticeSite*> third_nn;
+	vector<LatticeSite*> fourth_nn;
+	vector<LatticeSite*> fifth_nn;
 
 	LatticeSite();
 	LatticeSite(const int &id, const vector<double> &xyz);

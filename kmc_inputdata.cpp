@@ -19,13 +19,15 @@ using namespace std;
 	InputData::InputData() : box_length(3), unit_length(3) {}
 
 	void InputData::assign_nearest_neighbour_distance() {
-        nn_distance.assign(4,0.0);
+        nn_distance.assign(6,0.0);
         nn_distance[0] = 0.5*sqrt(0.0);
         nn_distance[1] = 0.5*sqrt(2.0);
         nn_distance[2] = 0.5*sqrt(4.0);
         nn_distance[3] = 0.5*sqrt(6.0);
+        nn_distance[4] = 0.5*sqrt(8.0);
+        nn_distance[5] = 0.5*sqrt(10.0);
 
-        include_ngb.assign(4,false);
+        include_ngb.assign(6,false);
 	}
 
 	void InputData::assign_parameter_name() {
@@ -80,8 +82,8 @@ using namespace std;
 			//assigning space for the vectors of solute/matrix properties
 			number_of_solute_per_type.assign(number_of_solute_type, int());
 
-			species_interaction_energy.assign(number_of_solute_type + 1, vector<vector<double> >(number_of_solute_type + 1, vector<double>(4, 0.0)));
-			e_species.assign(number_of_solute_type + 1, vector<vector<double> >(number_of_solute_type + 1, vector<double>(4, 0.0)));
+			species_interaction_energy.assign(number_of_solute_type + 1, vector<vector<double> >(number_of_solute_type + 1, vector<double>(6, 0.0)));
+			e_species.assign(number_of_solute_type + 1, vector<vector<double> >(number_of_solute_type + 1, vector<double>(6, 0.0)));
 			rate_pre_exponential.assign(number_of_solute_type + 1, double());
 			solute_rate.assign(number_of_solute_type + 1, double());
 			solute_migration_energy.assign(number_of_solute_type + 1, double());
@@ -131,7 +133,12 @@ using namespace std;
                 nn_distance = 2;
 			} else if (tokens[4].compare("third") == 0) {
                 nn_distance = 3;
+			} else if (tokens[4].compare("fourth") == 0) {
+                nn_distance = 4;
+			} else if (tokens[4].compare("fifth") == 0) {
+                nn_distance = 5;
 			}
+
 			species_interaction_energy[sol1][sol2][nn_distance] = energy;
 			species_interaction_energy[sol2][sol1][nn_distance] = energy;
 
@@ -151,6 +158,10 @@ using namespace std;
                 nn_distance = 2;
 			} else if (tokens[2].compare("third") == 0) {
                 nn_distance = 3;
+			} else if (tokens[2].compare("fourth") == 0) {
+                nn_distance = 4;
+			} else if (tokens[2].compare("fifth") == 0) {
+                nn_distance = 5;
 			}
 
 			species_interaction_energy[0][0][nn_distance] = energy;
@@ -168,6 +179,10 @@ using namespace std;
                 nn_distance = 2;
 			} else if (tokens[3].compare("third") == 0) {
                 nn_distance = 3;
+			} else if (tokens[3].compare("fourth") == 0) {
+                nn_distance = 4;
+			} else if (tokens[3].compare("fifth") == 0) {
+                nn_distance = 5;
 			}
 
 			species_interaction_energy[0][sol][nn_distance] = energy;
@@ -209,7 +224,11 @@ using namespace std;
                 eff_ngb_distance = 2;
             } else if (tokens[1].compare("third") == 0) {
                 eff_ngb_distance = 3;
-            } else {
+			} else if (tokens[1].compare("fourth") == 0) {
+                eff_ngb_distance = 4;
+			} else if (tokens[1].compare("fifth") == 0) {
+                eff_ngb_distance = 5;
+			} else {
                 eff_ngb_distance = 1;
             }
 
@@ -398,6 +417,8 @@ using namespace std;
             cout << "     1st nearest ngb distance = " << e_species[0][i][1] << "\n";
             cout << "     2nd nearest ngb distance = " << e_species[0][i][2] << "\n";
             cout << "     3rd nearest ngb distance = " << e_species[0][i][3] << "\n";
+            cout << "     4th nearest ngb distance = " << e_species[0][i][4] << "\n";
+            cout << "     5th nearest ngb distance = " << e_species[0][i][5] << "\n";
 
 		}
 
@@ -408,6 +429,8 @@ using namespace std;
 				cout << "   1st nearest ngb distance = " << e_species[i+1][j+1][1] << "\n";
 				cout << "   2nd nearest ngb distance = " << e_species[i+1][j+1][2] << "\n";
 				cout << "   3rd nearest ngb distance = " << e_species[i+1][j+1][3] << "\n";
+				cout << "   4th nearest ngb distance = " << e_species[i+1][j+1][4] << "\n";
+				cout << "   5th nearest ngb distance = " << e_species[i+1][j+1][5] << "\n";
 			}
 		}
 	}

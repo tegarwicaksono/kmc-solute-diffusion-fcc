@@ -24,21 +24,28 @@ public:
 	SimulationBox();
 	void generate_box(InputData* const &id);
 	LatticeSite* find_latt_id_fcc(const vector<double> &xyz);
-	vector<vector<double>> atoms_in_fcc_unit_cell();
-	vector<vector<double>> first_nearest_neighbours_fcc();
-	vector<vector<double>> second_nearest_neighbours_fcc();
-	vector<vector<double>> third_nearest_neighbours_fcc();
+	vector<vector<double> > atoms_in_fcc_unit_cell();
+
+	vector<vector<double> > first_nearest_neighbours_fcc();
+	vector<vector<double> > second_nearest_neighbours_fcc();
+	vector<vector<double> > third_nearest_neighbours_fcc();
+	vector<vector<double> > fourth_nearest_neighbours_fcc();
+	vector<vector<double> > fifth_nearest_neighbours_fcc();
 
 	void generate_sites_fcc();
-	vector<vector<double>> find_nn_per_site(const LatticeSite &site, const vector<vector<double>> &neighbours);
+	vector<vector<double> > find_nn_per_site(const LatticeSite &site, const vector<vector<double>> &neighbours);
 
 	void assign_1nn_fcc_per_site(LatticeSite &site, const vector<vector<double>> &neighbours);
 	void assign_2nn_fcc_per_site(LatticeSite &site, const vector<vector<double>> &neighbours);
 	void assign_3nn_fcc_per_site(LatticeSite &site, const vector<vector<double>> &neighbours);
+	void assign_4nn_fcc_per_site(LatticeSite &site, const vector<vector<double>> &neighbours);
+	void assign_5nn_fcc_per_site(LatticeSite &site, const vector<vector<double>> &neighbours);
 
 	void generate_first_nearest_neighbours();
 	void generate_second_nearest_neighbours();
 	void generate_third_nearest_neighbours();
+	void generate_fourth_nearest_neighbours();
+	void generate_fifth_nearest_neighbours();
 
 	void generate_neighbours();
 	void print_sites_fcc();
