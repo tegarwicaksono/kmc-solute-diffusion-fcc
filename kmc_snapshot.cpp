@@ -1,6 +1,10 @@
-/*  KMC Simulation for FCC lattice with diffusion by swapping
+/*  KMC Simulation for FCC lattice with diffusion
+    by species swap and/or vacancy exchange
     Author: Tegar Wicaksono (tegar@alumni.ubc.ca)
     Written: March 2017
+
+    Check repository below for the most updated version:
+    https://github.com/tegarwicaksono/kmc-solute-diffusion-fcc
 */
 
 #include "kmc_snapshot.h"
@@ -95,12 +99,19 @@ using namespace std;
   		dump << "H0(3,2) = 0 A" << endl;
   		dump << "H0(3,3) = " << box_dimension[2] << " A" << endl;
   		dump << ".NO_VELOCITY." << endl;
-  		dump << "entry_count = 3" << endl;
+        if (matrix_included) {
+
+            dump << "entry_count = 3" << endl;
+        } else {
+            dump << "entry_count = 4" << endl;
+        }
 	}
 
 	void Snapshot::print_species() {
+		double kB = 1.38064852e-23;	//Boltzmann constant
+		double eV = 1.60217662e-19;	//elementary charge
 		if (matrix_included) {
-			cout << "printing species, matrix included\n";
+			//cout << "printing species, matrix included\n";
 			for (size_t i = 0; i < matrix_to_dump.size(); ++i) {
 				int species_type = (matrix_to_dump[i]->occupant < 0) ? 0 : box->solutes[matrix_to_dump[i]->occupant].type;
 				dump << solute_mass[species_type] << endl << solute_name[species_type] << endl;
@@ -117,8 +128,9 @@ using namespace std;
 				for (size_t j = 0; j < species_to_dump[i]->curr_location->xyz.size(); ++j) {
 					dump << species_to_dump[i]->curr_location->xyz[j] / static_cast<double>(box->input->box_length[j]) << "\t";
 				}
-				dump << endl;
 
+				dump << species_to_dump[i]->current_energy *(kB * box->input->abs_temperature) / eV;
+				dump << endl;
 			}
 		}
 	}

@@ -1,6 +1,10 @@
-/*  KMC Simulation for FCC lattice with diffusion by swapping
+/*  KMC Simulation for FCC lattice with diffusion
+    by species swap and/or vacancy exchange
     Author: Tegar Wicaksono (tegar@alumni.ubc.ca)
     Written: March 2017
+
+    Check repository below for the most updated version:
+    https://github.com/tegarwicaksono/kmc-solute-diffusion-fcc
 */
 
 #include "kmc_restart.h"

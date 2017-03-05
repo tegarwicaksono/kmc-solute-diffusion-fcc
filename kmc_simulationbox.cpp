@@ -1,6 +1,10 @@
-/*  KMC Simulation for FCC lattice with diffusion by swapping
+/*  KMC Simulation for FCC lattice with diffusion
+    by species swap and/or vacancy exchange
     Author: Tegar Wicaksono (tegar@alumni.ubc.ca)
     Written: March 2017
+
+    Check repository below for the most updated version:
+    https://github.com/tegarwicaksono/kmc-solute-diffusion-fcc
 */
 
 #include "kmc_restart.h"
@@ -21,11 +25,27 @@ using namespace std;
 		input = id;
 		generate_sites_fcc();
 		generate_neighbours();
+
+		//print_site_neighbours();
+		//print_nn_fcc(2);
 		if (input->start_from_restart) {
 			generate_solute_from_restart();
 		} else {
 			generate_solute_from_scratch();
 		}
+	}
+
+	double SimulationBox::calculate_distance(LatticeSite* const &site1, LatticeSite* const &site2) {
+        double delta, distance = 0.0;
+
+        for (int i = 0; i < 3; ++i) {
+            delta = fabs(site1->xyz[i] - site2->xyz[i]);
+            if (delta > input->box_length[i] / 2.0) {
+                delta = fabs(delta - input->box_length[i]);
+            }
+            distance += delta*delta;
+        }
+        return sqrt(distance);
 	}
 
 	LatticeSite* SimulationBox::find_latt_id_fcc(const vector<double> &xyz) {
@@ -59,19 +79,25 @@ using namespace std;
 		return list;
 	}
 
+	vector<vector<double> > SimulationBox::zeroth_nearest_neighbours_fcc() {
+        vector<vector<double> > list;
+        list.push_back(std::initializer_list<double>{0.0,0.0,0.0});
+        return list;
+	}
+
 	vector<vector<double> > SimulationBox::first_nearest_neighbours_fcc() {
 		vector<vector<double> > list;
 		list.push_back(std::initializer_list<double>{0.0,-0.5,-0.5});	//1
 		list.push_back(std::initializer_list<double>{0.0,-0.5,+0.5});	//2
-		list.push_back(std::initializer_list<double>{0.0,0.5,-0.5});		//3
+		list.push_back(std::initializer_list<double>{0.0,0.5,-0.5});	//3
 		list.push_back(std::initializer_list<double>{0.0,0.5,0.5});		//4
 		list.push_back(std::initializer_list<double>{-0.5,0.0,-0.5});	//5
-		list.push_back(std::initializer_list<double>{-0.5,0.0,0.5});		//6
-		list.push_back(std::initializer_list<double>{0.5,0.0,-0.5});		//7
+		list.push_back(std::initializer_list<double>{-0.5,0.0,0.5});	//6
+		list.push_back(std::initializer_list<double>{0.5,0.0,-0.5});	//7
 		list.push_back(std::initializer_list<double>{0.5,0.0,0.5});		//8
 		list.push_back(std::initializer_list<double>{-0.5,-0.5,0.0});	//9
-		list.push_back(std::initializer_list<double>{-0.5,0.5,0.0});		//10
-		list.push_back(std::initializer_list<double>{0.5,-0.5,0.0});		//11
+		list.push_back(std::initializer_list<double>{-0.5,0.5,0.0});	//10
+		list.push_back(std::initializer_list<double>{0.5,-0.5,0.0});	//11
 		list.push_back(std::initializer_list<double>{0.5,0.5,0.0});		//12
 		return list;
 	}
@@ -79,11 +105,11 @@ using namespace std;
 	vector<vector<double> > SimulationBox::second_nearest_neighbours_fcc() {
 		vector<vector<double> > list;
 		list.push_back(std::initializer_list<double>{-1.0,0.0,0.0});	//1
-		list.push_back(std::initializer_list<double>{1.0,0.0,0.0});	//2
+		list.push_back(std::initializer_list<double>{1.0,0.0,0.0});	    //2
 		list.push_back(std::initializer_list<double>{0.0,-1.0,0.0});	//3
-		list.push_back(std::initializer_list<double>{0.0,1.0,0.0});	//4
+		list.push_back(std::initializer_list<double>{0.0,1.0,0.0});	    //4
 		list.push_back(std::initializer_list<double>{0.0,0.0,-1.0});	//5
-		list.push_back(std::initializer_list<double>{0.0,0.0,1.0});	//6
+		list.push_back(std::initializer_list<double>{0.0,0.0,1.0});	    //6
 		return list;
 	}
 
@@ -140,6 +166,7 @@ using namespace std;
 	}
 
 	vector<vector<double > > SimulationBox::fifth_nearest_neighbours_fcc() {
+        vector<vector<double> > list;
 		list.push_back(std::initializer_list<double>{0.0,-0.5,-1.5});	//1
 		list.push_back(std::initializer_list<double>{0.0,-0.5,+1.5});	//2
 		list.push_back(std::initializer_list<double>{0.0,0.5,-1.5});	//3
@@ -169,6 +196,8 @@ using namespace std;
 		list.push_back(std::initializer_list<double>{-1.5,0.5,0.0});	//22
 		list.push_back(std::initializer_list<double>{1.5,-0.5,0.0});	//23
 		list.push_back(std::initializer_list<double>{1.5,0.5,0.0});		//24
+
+		return list;
 	}
 
 	void SimulationBox::generate_sites_fcc() {
@@ -181,7 +210,9 @@ using namespace std;
 						vector<double> xyz({coor[0] + static_cast<double>(i),
 											coor[1] + static_cast<double>(j),
 											coor[2] + static_cast<double>(k)});
-						lattice_sites.push_back(LatticeSite(latt_id++, xyz));
+						lattice_sites.push_back(LatticeSite(latt_id, xyz));
+						lattice_sites[latt_id].allocate_neighbours(input->max_ngb_distance + 1);
+						++latt_id;
 					}
 				}
 			}
@@ -191,7 +222,7 @@ using namespace std;
 	vector<vector<double>> SimulationBox::find_nn_per_site(const LatticeSite &site,
 		const vector<vector<double>> &neighbours) {
 
-		vector<vector<double>> list;
+		vector<vector<double> > list;
 		for (size_t i = 0; i < neighbours.size(); ++i) {
 			vector<double> neighbour_site(site.xyz);
 
@@ -213,87 +244,41 @@ using namespace std;
 		return list;
 	}
 
-	void SimulationBox::assign_1nn_fcc_per_site(LatticeSite &site, const vector<vector<double>> &neighbours) {
-		vector<vector<double>> nn1s = find_nn_per_site(site, neighbours);
-		for (const vector<double> &nn1 : nn1s) {
-			site.first_nn.push_back(find_latt_id_fcc(nn1));
-		}
+    void SimulationBox::assign_nth_ngbs_fcc_per_site(const size_t &index, LatticeSite &site, const vector<vector<double>> &nth_ngbs) {
+        vector<vector<double> > nns = find_nn_per_site(site, nth_ngbs);
+        for (const vector<double> &nn : nns) {
+            site.nth_neighbours[index].push_back(find_latt_id_fcc(nn));
+        }
 	}
 
-	void SimulationBox::assign_2nn_fcc_per_site(LatticeSite &site, const vector<vector<double>> &neighbours) {
-		vector<vector<double>> nn2s = find_nn_per_site(site, neighbours);
-		for (const vector<double> &nn2 : nn2s) {
-			site.second_nn.push_back(find_latt_id_fcc(nn2));
-		}
-	}
+    void SimulationBox::generate_nth_nearest_neighbours() {
+        vector<vector<vector<double> > > neighbours;
 
-    void SimulationBox::assign_3nn_fcc_per_site(LatticeSite &site, const vector<vector<double>> &neighbours) {
-		vector<vector<double>> nn3s = find_nn_per_site(site, neighbours);
-		for (const vector<double> &nn3 : nn3s) {
-			site.third_nn.push_back(find_latt_id_fcc(nn3));
-		}
-	}
+        neighbours.push_back(zeroth_nearest_neighbours_fcc());
+        neighbours.push_back(first_nearest_neighbours_fcc());
+        neighbours.push_back(second_nearest_neighbours_fcc());
+        neighbours.push_back(third_nearest_neighbours_fcc());
+        neighbours.push_back(fourth_nearest_neighbours_fcc());
+        neighbours.push_back(fifth_nearest_neighbours_fcc());
 
-    void SimulationBox::assign_4nn_fcc_per_site(LatticeSite &site, const vector<vector<double>> &neighbours) {
-		vector<vector<double>> nn4s = find_nn_per_site(site, neighbours);
-		for (const vector<double> &nn4 : nn4s) {
-			site.fourth_nn.push_back(find_latt_id_fcc(nn4));
-		}
-	}
-
-    void SimulationBox::assign_5nn_fcc_per_site(LatticeSite &site, const vector<vector<double>> &neighbours) {
-		vector<vector<double>> nn5s = find_nn_per_site(site, neighbours);
-		for (const vector<double> &nn5 : nn5s) {
-			site.fifth_nn.push_back(find_latt_id_fcc(nn5));
-		}
-	}
-
-	void SimulationBox::generate_first_nearest_neighbours() {
-		vector<vector<double>> nn1s = first_nearest_neighbours_fcc();
-
-		for (size_t i = 0; i < lattice_sites.size(); ++i) {
-			assign_1nn_fcc_per_site(lattice_sites[i], nn1s);
-		}
-	}
-
-	void SimulationBox::generate_second_nearest_neighbours() {
-		vector<vector<double>> nn2s = second_nearest_neighbours_fcc();
-
-		for (size_t i = 0; i < lattice_sites.size(); ++i) {
-			assign_2nn_fcc_per_site(lattice_sites[i], nn2s);
-		}
-	}
-
-	void SimulationBox::generate_third_nearest_neighbours() {
-		vector<vector<double>> nn3s = third_nearest_neighbours_fcc();
-
-		for (size_t i = 0; i < lattice_sites.size(); ++i) {
-			assign_3nn_fcc_per_site(lattice_sites[i], nn3s);
-		}
-	}
-
-	void SimulationBox::generate_fourth_nearest_neighbours() {
-		vector<vector<double> > nn4s = fourth_nearest_neighbours_fcc();
-
-		for (size_t i = 0; i < lattice_sites.size(); ++i) {
-			assign_4nn_fcc_per_site(lattice_sites[i], nn4s);
-		}
-	}
-
-	void SimulationBox::generate_fifth_nearest_neighbours() {
-		vector<vector<double>> nn5s = fifth_nearest_neighbours_fcc();
-
-		for (size_t i = 0; i < lattice_sites.size(); ++i) {
-			assign_5nn_fcc_per_site(lattice_sites[i], nn5s);
-		}
-	}
+/*
+        cout << "for neighbours vector, there are " << endl;
+        cout << neighbours[0].size() << " zeroth NNs" << endl;
+        cout << neighbours[1].size() << " first NNs" << endl;
+        cout << neighbours[2].size() << " second NNs" << endl;
+        cout << neighbours[3].size() << " third NNs" << endl;
+        cout << neighbours[4].size() << " fourth NNs" << endl;
+        cout << neighbours[5].size() << " fifth NNs" << endl;
+*/
+        for (size_t i = 0; i < lattice_sites.size(); ++i) {
+            for (size_t j = 0; j < neighbours.size(); ++j) {
+                assign_nth_ngbs_fcc_per_site(j, lattice_sites[i], neighbours[j]);
+            }
+        }
+    }
 
 	void SimulationBox::generate_neighbours() {
-		generate_first_nearest_neighbours();
-		generate_second_nearest_neighbours();
-		generate_third_nearest_neighbours();
-		generate_fourth_nearest_neighbours();
-		generate_fifth_nearest_neighbours();
+		generate_nth_nearest_neighbours();
 	}
 
 	void SimulationBox::print_sites_fcc() {
@@ -303,6 +288,7 @@ using namespace std;
 		}
 	}
 
+
 	void SimulationBox::print_test_1nn_fcc() {
 		int sample_id;
 
@@ -310,20 +296,23 @@ using namespace std;
 		cout << "=========== SAMPLE TEST 1NN ===========\n";
 		cout << "Reference site: ";
 		lattice_sites[sample_id].print();
-		cout << "In object sample, the first_nn has " << lattice_sites[sample_id].first_nn.size() << " elements\n";
-		for (LatticeSite* const &nn1 : lattice_sites[sample_id].first_nn) {
+		cout << "In object sample, the first_nn has " << lattice_sites[sample_id].nth_neighbours[1].size() << " elements\n";
+		for (LatticeSite* const &nn1 : lattice_sites[sample_id].nth_neighbours[1]) {
 			nn1->print();
 		}
 	}
 
-	void SimulationBox::print_1nn_fcc() {
+    void SimulationBox::print_nn_fcc(const int &index) {
 		for (size_t i = 0; i < lattice_sites.size(); ++i) {
-			cout << "site id = " << lattice_sites[i].id << ", occup = " << lattice_sites[i].occupant << ", 1nn ngbs = ";
-			for (size_t j = 0; j < lattice_sites[i].first_nn.size(); ++j) {
-				cout << lattice_sites[i].first_nn[j]->id << ", ";
+			cout << "site id = " << lattice_sites[i].id << ", occup = " << lattice_sites[i].occupant << ", " <<  index << "-th ngbs = ";
+			for (size_t j = 0; j < lattice_sites[i].nth_neighbours[index].size(); ++j) {
+				cout << lattice_sites[i].nth_neighbours[index][j]->id << ", ";
 			}
-			cout << "\n";
-
+			cout << "  distance = " << endl << "\t";
+			for (size_t j = 0; j < lattice_sites[i].nth_neighbours[index].size(); ++j) {
+				cout << calculate_distance(&lattice_sites[i], lattice_sites[i].nth_neighbours[index][j]) << ", ";
+			}
+			cout << endl;
 		}
 	}
 
@@ -334,8 +323,8 @@ using namespace std;
 		cout << "=========== SAMPLE TEST 2NN ===========\n";
 		cout << "Reference site: ";
 		lattice_sites[sample_id].print();
-		cout << "In object sample, the second_nn has " << lattice_sites[sample_id].second_nn.size() << " elements\n";
-		for (LatticeSite* const &nn2 : lattice_sites[sample_id].second_nn) {
+		cout << "In object sample, the second_nn has " << lattice_sites[sample_id].nth_neighbours[2].size() << " elements\n";
+		for (LatticeSite* const &nn2 : lattice_sites[sample_id].nth_neighbours[2]) {
 			nn2->print();
 		}
 	}
@@ -388,98 +377,45 @@ using namespace std;
 
 	double SimulationBox::calculate_energy(LatticeSite* const &site, const int &ref_type) {
 		double total_energy = 0.0;
-
-		if (input->include_ngb[1]) {
-            for (size_t i = 0; i < site->first_nn.size(); ++i) {
-                int ngb_type = (site->first_nn[i]->occupant < 0) ? 0 : solutes[site->first_nn[i]->occupant].type;
-                total_energy += input->e_species[ref_type][ngb_type][1];
+		for (size_t i = 1; i < input->include_ngb.size(); ++i) {
+		    double temp = 0.0;
+            if (input->include_ngb[i]) {
+                for (size_t j = 0; j < site->nth_neighbours[i].size(); ++j) {
+                    int ngb_type = (site->nth_neighbours[i][j]->occupant < 0) ? 0 : solutes[site->nth_neighbours[i][j]->occupant].type;
+                    temp += input->e_species[ref_type][ngb_type][i];
+                }
             }
+            total_energy += temp;
 		}
 
-		if (input->include_ngb[2]) {
-            for (size_t i = 0; i < site->second_nn.size(); ++i) {
-                int ngb_type = (site->second_nn[i]->occupant < 0) ? 0 : solutes[site->second_nn[i]->occupant].type;
-                total_energy += input->e_species[ref_type][ngb_type][2];
-            }
-		}
-
-		if (input->include_ngb[3]) {
-            for (size_t i = 0; i < site->third_nn.size(); ++i) {
-                int ngb_type = (site->third_nn[i]->occupant < 0) ? 0 : solutes[site->third_nn[i]->occupant].type;
-                total_energy += input->e_species[ref_type][ngb_type][3];
-            }
-		}
-
-		if (input->include_ngb[4]) {
-            for (size_t i = 0; i < site->fourth_nn.size(); ++i) {
-                int ngb_type = (site->fourth_nn[i]->occupant < 0) ? 0 : solutes[site->fourth_nn[i]->occupant].type;
-                total_energy += input->e_species[ref_type][ngb_type][4];
-            }
-		}
-
-		if (input->include_ngb[5]) {
-            for (size_t i = 0; i < site->fifth_nn.size(); ++i) {
-                int ngb_type = (site->fifth_nn[i]->occupant < 0) ? 0 : solutes[site->fifth_nn[i]->occupant].type;
-                total_energy += input->e_species[ref_type][ngb_type][5];
-            }
-		}
-
-		return total_energy;
+		return 0.5*total_energy;
 	}
 
-	double SimulationBox::calculate_energy(LatticeSite* const &target_site, LatticeSite* const &current_site, const int &ref_type, bool &flag) {
+	double SimulationBox::calculate_energy(LatticeSite* const &target_site, LatticeSite* const &current_site, const int &ref_type) {
 		double total_energy = 0.0;
 
-		if (input->include_ngb[1]) {
-            for (size_t i = 0; i < target_site->first_nn.size(); ++i) {
-                int occupant = (target_site->first_nn[i]->id == current_site->id) ? target_site->occupant : target_site->first_nn[i]->occupant;
-                int ngb_type = (occupant < 0) ? 0 : solutes[occupant].type;
-                flag = (ref_type == ngb_type);
-                total_energy += input->e_species[ref_type][ngb_type][1];
+		for (size_t i = 1; i < input->include_ngb.size(); ++i) {
+            if (input->include_ngb[i]) {
+                for (size_t j = 0; j < target_site->nth_neighbours[i].size(); ++j) {
+                    int occupant = (target_site->nth_neighbours[i][j]->id == current_site->id) ? target_site->occupant : target_site->nth_neighbours[i][j]->occupant;
+                    int ngb_type = (occupant < 0) ? 0 : solutes[occupant].type;
+
+                    total_energy += input->e_species[ref_type][ngb_type][i];
+                }
             }
 		}
 
-		if (input->include_ngb[2]) {
-            for (size_t i = 0; i < target_site->second_nn.size(); ++i) {
-                int occupant = (target_site->second_nn[i]->id == current_site->id) ? target_site->occupant : target_site->second_nn[i]->occupant;
-                int ngb_type = (occupant < 0) ? 0 : solutes[occupant].type;
-                total_energy += input->e_species[ref_type][ngb_type][2];
-            }
-		}
-
-		if (input->include_ngb[3]) {
-            for (size_t i = 0; i < target_site->third_nn.size(); ++i) {
-                int occupant = (target_site->third_nn[i]->id == current_site->id) ? target_site->occupant : target_site->third_nn[i]->occupant;
-                int ngb_type = (occupant < 0) ? 0 : solutes[occupant].type;
-                total_energy += input->e_species[ref_type][ngb_type][3];
-            }
-		}
-
-		if (input->include_ngb[4]) {
-            for (size_t i = 0; i < target_site->fourth_nn.size(); ++i) {
-                int occupant = (target_site->fourth_nn[i]->id == current_site->id) ? target_site->occupant : target_site->fourth_nn[i]->occupant;
-                int ngb_type = (occupant < 0) ? 0 : solutes[occupant].type;
-                total_energy += input->e_species[ref_type][ngb_type][4];
-            }
-		}
-
-		if (input->include_ngb[5]) {
-            for (size_t i = 0; i < target_site->fifth_nn.size(); ++i) {
-                int occupant = (target_site->fifth_nn[i]->id == current_site->id) ? target_site->occupant : target_site->fifth_nn[i]->occupant;
-                int ngb_type = (occupant < 0) ? 0 : solutes[occupant].type;
-                total_energy += input->e_species[ref_type][ngb_type][5];
-            }
-		}
-
-		return total_energy;
+		return 0.5*total_energy;
 	}
 
 	void SimulationBox::generate_solute_energy_and_rate() {
 		for (size_t i = 0; i < solutes.size(); ++i) {
 			solutes[i].current_energy = calculate_energy(solutes[i].curr_location, solutes[i].type);
+			//cout << "solute #" << i << " current energy = " << solutes[i].current_energy << endl;
 			for (size_t j = 0; j < solutes[i].next_locations.size(); ++j) {
-				bool is_identical;
-				solutes[i].next_energies.push_back(calculate_energy(solutes[i].next_locations[j], solutes[i].curr_location, solutes[i].type, is_identical));
+				//bool is_identical;
+				//solutes[i].next_energies.push_back(calculate_energy(solutes[i].next_locations[j], solutes[i].curr_location, solutes[i].type, is_identical));
+				solutes[i].next_energies.push_back(calculate_energy(solutes[i].next_locations[j], solutes[i].curr_location, solutes[i].type));
 
 				//calculate migration energy
 				double migration_energy = input->e_migrate[solutes[i].type];
@@ -487,7 +423,7 @@ using namespace std;
 
 				//calculate event rate
 				double event_rate = input->rate_factor*input->solute_rate[solutes[i].type]*exp(-1.0*migration_energy);
-				if (is_identical) event_rate *= flag_for_identical_swap;
+				//if (is_identical) event_rate *= flag_for_identical_swap;
 
 				solutes[i].rates.push_back(event_rate);
 			}
@@ -498,8 +434,9 @@ using namespace std;
 		for (size_t i = 0; i < solutes.size(); ++i) {
 			solutes[i].current_energy = calculate_energy(solutes[i].curr_location, solutes[i].type);
 			for (size_t j = 0; j < solutes[i].next_locations.size(); ++j) {
-				bool is_identical;
-				solutes[i].next_energies[j] = calculate_energy(solutes[i].next_locations[j], solutes[i].curr_location, solutes[i].type, is_identical);
+				//bool is_identical;
+				//solutes[i].next_energies[j] = calculate_energy(solutes[i].next_locations[j], solutes[i].curr_location, solutes[i].type, is_identical);
+				solutes[i].next_energies[j] = calculate_energy(solutes[i].next_locations[j], solutes[i].curr_location, solutes[i].type);
 
 				//calculate migration energy
 				double migration_energy = input->e_migrate[solutes[i].type];
@@ -507,7 +444,7 @@ using namespace std;
 
 				//calculate event rate
 				double event_rate = input->rate_factor*input->solute_rate[solutes[i].type]*exp(-1.0*migration_energy);
-				if (is_identical) event_rate *= flag_for_identical_swap;
+//				if (is_identical) event_rate *= flag_for_identical_swap;
 				solutes[i].rates[j] = event_rate;
 			}
 		}
@@ -534,4 +471,14 @@ using namespace std;
 		for (auto &&solute : solutes) {
 			solute.print_future_energy_and_rate();
 		}
+	}
+
+	void SimulationBox::print_site_neighbours() {
+        for (size_t i = 0; i < lattice_sites.size(); ++i) {
+            cout << "For lattice site = " << lattice_sites[i].id << ", there are : ";
+            for (size_t j = 0; j < lattice_sites[i].nth_neighbours.size(); ++j) {
+                cout << lattice_sites[i].nth_neighbours[j].size() << " ngbs, ";
+            }
+            cout << endl;
+        }
 	}

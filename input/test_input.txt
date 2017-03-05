@@ -22,50 +22,62 @@ number_of_solute_type 	2
 
 number_of_solute_of_type	1	100
 #	means for solute type 1, there are 100 atoms
-number_of_solute_of_type	2	1
+number_of_solute_of_type	2	0
 
-pre_exp_rate_term	1	0.0
+pre_exp_rate_term	1	1.0e12
 #	pre exponential rate term is 1.0e12 s^-1 for solute type 1
 
-pre_exp_rate_term	2	1.0e12
+pre_exp_rate_term	2	0
 
 solute_migration_energy	1	0.1
 #	migration energy for solute type 1 = 0.1 eV
 
 solute_migration_energy	2	0.2	
 
-effective_interaction_distance	first
+effective_interaction_distance	fifth
 #	"first" ==> interaction only considers first nearest neighbour
-#	in this simulation, the available options are only: "first", "second", "third"
-#	so, if want to consider up to 2nd nearest neighbour distance, type:
-#	effective_interaction_distance	second
+#	in this simulation, the available options are only: 
+#   "first", "second", "third", "fourth", "fifth"
+#	so, if want to consider up to 3rd nearest neighbour distance, type:
+#	effective_interaction_distance	third
 
-solute_solute_interaction_energy	1	2	-0.5	first
+#	if "fifth" is set as effective_interaction_distance, but not all interaction energies are specified,
+#	then those energies that are not specified are assumed to be zero
+
+solute_solute_interaction_energy	1	2	0.0	first
 #   interaction energy between solute type 1 and 2 at a first nearest neighbour distance is -0.5 eV
 
-solute_solute_interaction_energy	1	1	-0.5	first
-solute_solute_interaction_energy	2	2	0.0		first
+solute_solute_interaction_energy	1	1	0.0	first
+solute_solute_interaction_energy	2	2	0.0	first
 
 matrix_matrix_interaction_energy	0.0		first
 #   interaction energy between matrix and matrix atom = 0.0 eV
 
-solute_matrix_interaction_energy	1	0.05	first
+solute_matrix_interaction_energy	1	-1.0	first
+solute_matrix_interaction_energy	1	-0.5	second
+solute_matrix_interaction_energy	1	-0.4	third
+solute_matrix_interaction_energy	1	-0.3	fourth
+solute_matrix_interaction_energy	1	-0.2	fifth
 #   interaction energy between matrix and solute type 1 is 0.05 eV
 
-solute_matrix_interaction_energy	2	0.01	first
+solute_matrix_interaction_energy	2	-2.0	first
+solute_matrix_interaction_energy	2	-1.5	second
+solute_matrix_interaction_energy	2	-1.4	third
+solute_matrix_interaction_energy	2	-1.3	fourth
+solute_matrix_interaction_energy	2	-1.2	fifth
 
-number_of_KMC_steps		10
+number_of_KMC_steps		2000
 # total of 100,000 KMC steps will be performed
 
-dump_snapshot	5	1	2
+dump_snapshot	100		1	2
 #   produce CFG files (readable in OVITO and AtomEye) for solute type 1 and 2 every 50 KMC steps 
 #   CFG files are stored in folder 'dump_snapshot'
 #   implicitly also, the state of simulation is produced in a logfile found 
 #	in subfolder 'log' every 50 KMC steps
 
 
-dump_restart	5
-#   produce a restart file every 100 KMC steps
+dump_restart	100
+#   produce a restart file every 1000 KMC steps
 #   restart files are stored in folder 'dump_restart'
 
 #read_from_restart	300

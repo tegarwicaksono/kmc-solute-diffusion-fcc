@@ -1,6 +1,10 @@
-/*  KMC Simulation for FCC lattice with diffusion by swapping
+/*  KMC Simulation for FCC lattice with diffusion
+    by species swap and/or vacancy exchange
     Author: Tegar Wicaksono (tegar@alumni.ubc.ca)
     Written: March 2017
+
+    Check repository below for the most updated version:
+    https://github.com/tegarwicaksono/kmc-solute-diffusion-fcc
 */
 
 #ifndef KMC_INPUTDATA_H_INCLUDED
@@ -18,6 +22,8 @@ public:
 	vector<double> unit_length;		//in Angstrom
 	int number_of_solute_type;
 	double abs_temperature; 		//in Kelvin
+	double kB;                      //Boltzmann
+	double eV;                      //eV
 	vector<int> number_of_solute_per_type;
 
 	vector<double> nn_distance;
@@ -27,7 +33,7 @@ public:
 	//species[1] = solute 1;
 	//species[2] = solute 2;
 
-	int eff_ngb_distance;
+	int eff_ngb_distance, max_ngb_distance = 5;
 	vector<bool>            include_ngb;
 	vector<double> 			rate_pre_exponential;		//in s^-1
 	double					rate_factor;	//minimum of rate_pre_exponential

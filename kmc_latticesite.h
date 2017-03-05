@@ -1,6 +1,10 @@
-/*  KMC Simulation for FCC lattice with diffusion by swapping
+/*  KMC Simulation for FCC lattice with diffusion
+    by species swap and/or vacancy exchange
     Author: Tegar Wicaksono (tegar@alumni.ubc.ca)
     Written: March 2017
+
+    Check repository below for the most updated version:
+    https://github.com/tegarwicaksono/kmc-solute-diffusion-fcc
 */
 
 #ifndef KMC_LATTICESITE_H_INCLUDED
@@ -15,15 +19,13 @@ public:
 	int id;
 	int occupant = -1;	//by default, it's -1 (matrix). else, species = id of the solute
 	vector<double> xyz;
-	vector<LatticeSite*> first_nn;
-	vector<LatticeSite*> second_nn;
-	vector<LatticeSite*> third_nn;
-	vector<LatticeSite*> fourth_nn;
-	vector<LatticeSite*> fifth_nn;
+	vector<vector<LatticeSite*> > nth_neighbours;
+	// i.e. nth_neighbours[1] = 1st nearest neighbours, nth_neighbours[2] = 2nd nearest neighbours, up to 6
 
 	LatticeSite();
 	LatticeSite(const int &id, const vector<double> &xyz);
 
+    void allocate_neighbours(const int &);
 	void print();
 };
 

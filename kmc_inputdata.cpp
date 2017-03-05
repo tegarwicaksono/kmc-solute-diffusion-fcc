@@ -1,6 +1,10 @@
-/*  KMC Simulation for FCC lattice with diffusion by swapping
+/*  KMC Simulation for FCC lattice with diffusion
+    by species swap and/or vacancy exchange
     Author: Tegar Wicaksono (tegar@alumni.ubc.ca)
     Written: March 2017
+
+    Check repository below for the most updated version:
+    https://github.com/tegarwicaksono/kmc-solute-diffusion-fcc
 */
 
 #include "kmc_inputdata.h"
@@ -15,19 +19,14 @@
 
 using namespace std;
 
-
 	InputData::InputData() : box_length(3), unit_length(3) {}
 
 	void InputData::assign_nearest_neighbour_distance() {
-        nn_distance.assign(6,0.0);
-        nn_distance[0] = 0.5*sqrt(0.0);
-        nn_distance[1] = 0.5*sqrt(2.0);
-        nn_distance[2] = 0.5*sqrt(4.0);
-        nn_distance[3] = 0.5*sqrt(6.0);
-        nn_distance[4] = 0.5*sqrt(8.0);
-        nn_distance[5] = 0.5*sqrt(10.0);
-
-        include_ngb.assign(6,false);
+	    nn_distance.assign(max_ngb_distance + 1, 0.0);
+	    for (size_t i = 0; i < nn_distance.size(); ++i) {
+            nn_distance[i] = 0.5*sqrt(2.0*i);
+	    }
+        include_ngb.assign(max_ngb_distance + 1,false);
 	}
 
 	void InputData::assign_parameter_name() {
@@ -82,8 +81,8 @@ using namespace std;
 			//assigning space for the vectors of solute/matrix properties
 			number_of_solute_per_type.assign(number_of_solute_type, int());
 
-			species_interaction_energy.assign(number_of_solute_type + 1, vector<vector<double> >(number_of_solute_type + 1, vector<double>(6, 0.0)));
-			e_species.assign(number_of_solute_type + 1, vector<vector<double> >(number_of_solute_type + 1, vector<double>(6, 0.0)));
+			species_interaction_energy.assign(number_of_solute_type + 1, vector<vector<double> >(number_of_solute_type + 1, vector<double>(max_ngb_distance + 1, 0.0)));
+			e_species.assign(number_of_solute_type + 1, vector<vector<double> >(number_of_solute_type + 1, vector<double>(max_ngb_distance + 1, 0.0)));
 			rate_pre_exponential.assign(number_of_solute_type + 1, double());
 			solute_rate.assign(number_of_solute_type + 1, double());
 			solute_migration_energy.assign(number_of_solute_type + 1, double());
@@ -347,8 +346,8 @@ using namespace std;
 	}
 
 	void InputData::convert_input_data() {
-		double kB = 1.38064852e-23;	//Boltzmann constant
-		double eV = 1.60217662e-19;	//elementary charge
+        kB = 1.38064852e-23;	//Boltzmann constant
+		eV = 1.60217662e-19;	//elementary charge
 
 		e_species = species_interaction_energy;
 		for (size_t i = 0; i < e_species.size(); ++i) {
@@ -414,23 +413,18 @@ using namespace std;
 		cout << "\n>> Solute interaction with matrix terms\n";
 		for (size_t i = 1; i < e_species[0].size(); ++i) {
 			cout << ">> Scaled interaction between matrix and solute " << i << " : " << endl;
-            cout << "     1st nearest ngb distance = " << e_species[0][i][1] << "\n";
-            cout << "     2nd nearest ngb distance = " << e_species[0][i][2] << "\n";
-            cout << "     3rd nearest ngb distance = " << e_species[0][i][3] << "\n";
-            cout << "     4th nearest ngb distance = " << e_species[0][i][4] << "\n";
-            cout << "     5th nearest ngb distance = " << e_species[0][i][5] << "\n";
-
+			for (int j = 1; j <= eff_ngb_distance; ++j) {
+                cout << "    at " << j << "-th nearest ngb distance = " << e_species[0][i][j] << endl;
+			}
 		}
 
 		cout << "\n>> Solute-solute interaction terms\n";
 		for (int i = 0; i < number_of_solute_type; ++i) {
 			for (int j = i; j < number_of_solute_type; ++j) {
 				cout << ">> Scaled interaction between solutes " << i + 1 << " and " << j + 1 << " : " << endl;
-				cout << "   1st nearest ngb distance = " << e_species[i+1][j+1][1] << "\n";
-				cout << "   2nd nearest ngb distance = " << e_species[i+1][j+1][2] << "\n";
-				cout << "   3rd nearest ngb distance = " << e_species[i+1][j+1][3] << "\n";
-				cout << "   4th nearest ngb distance = " << e_species[i+1][j+1][4] << "\n";
-				cout << "   5th nearest ngb distance = " << e_species[i+1][j+1][5] << "\n";
+                for (int k = 1; k <= eff_ngb_distance; ++k) {
+                    cout << "    at " << k << "-th nearest ngb distance = " << e_species[i+1][j+1][k] << endl;
+                }
 			}
 		}
 	}

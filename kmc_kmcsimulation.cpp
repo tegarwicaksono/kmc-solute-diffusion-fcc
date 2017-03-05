@@ -1,6 +1,10 @@
-/*  KMC Simulation for FCC lattice with diffusion by swapping
+/*  KMC Simulation for FCC lattice with diffusion
+    by species swap and/or vacancy exchange
     Author: Tegar Wicaksono (tegar@alumni.ubc.ca)
     Written: March 2017
+
+    Check repository below for the most updated version:
+    https://github.com/tegarwicaksono/kmc-solute-diffusion-fcc
 */
 
 #include "kmc_kmcsimulation.h"
@@ -24,7 +28,6 @@ using namespace std;
 	void KMCSimulation::assign_simulation_box(SimulationBox* const &sb) {
 		kmc_box = sb;
 
-		//cout << "There are " << sb->solutes.size() << " number of solutes\n";
 		for (size_t i = 0; i < kmc_box->solutes.size(); ++i) {
 			for (size_t j = 0; j < kmc_box->solutes[i].rates.size(); ++j) {
 				rates.push_back(Rate(&kmc_box->solutes[i], j));
@@ -43,17 +46,15 @@ using namespace std;
 		prev_time_clock = curr_time_clock;
 
         //print_interaction_energy();
-
 	}
 
     void KMCSimulation::print_interaction_energy() {
         for (size_t i = 0; i < kmc_box->input->e_species.size(); ++i) {
             for (size_t j = 0; j < kmc_box->input->e_species[i].size(); ++j) {
                 cout << "Interaction energy for solute " << i << "-" << j << " is : " << endl;
-                cout << "  at 1st nearest ngb distance = " << kmc_box->input->e_species[i][j][1] << "\n";
-                cout << "  at 2nd nearest ngb distance = " << kmc_box->input->e_species[i][j][2] << "\n";
-                cout << "  at 3rd nearest ngb distance = " << kmc_box->input->e_species[i][j][3] << "\n";
-
+                for (size_t k = 1; k < kmc_box->input->e_species[i][j].size(); ++k) {
+                    cout << "  at " << k << "-th nearest ngb distance = " << kmc_box->input->e_species[i][j][k] << "\n";
+                }
             }
         }
     }
@@ -81,7 +82,10 @@ using namespace std;
             cout << "!!!!!!!!!!!!WARNING!!!!!!!!!!!" << endl;
             cout << "!!EACH EVENT HAS A ZERO RATE!!" << endl;
             cout << "!KMC DOES NOT KNOW WHAT TO DO!" << endl;
+            cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
             cout << "SUGGESTION:  MODIFY INPUT FILE" << endl;
+            cout << "SO THAT AT LEAST 1 SPECIES HAS" << endl;
+            cout << "!!!!!!!A NON ZERO RATE!!!!!!!!" << endl;
             cout << "==============================" << endl;
 		}
 	}
@@ -227,10 +231,9 @@ using namespace std;
 		for (unsigned long long int step = kmc_box->input->initial_timestep + 1; step <= kmc_box->input->final_timestep; ++step) {
 			run_one_kmc_step();
 			print_simulation_step_status(step);
-			if (step < kmc_box->input->final_timestep) {
-                check_to_produce_logfile(step);
-				check_to_produce_snapshot(step);
-				check_to_produce_restart(step);
-			}
+            check_to_produce_logfile(step);
+            check_to_produce_snapshot(step);
+			check_to_produce_restart(step);
+
 		}
 	}
