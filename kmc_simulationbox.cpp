@@ -19,7 +19,41 @@
 
 using namespace std;
 
-	SimulationBox::SimulationBox() {}
+	SimulationBox::SimulationBox()
+        : flag_for_identical_swap(1)
+	{}
+
+	SimulationBox::SimulationBox(const SimulationBox& other)
+        : lattice_sites{other.lattice_sites}
+        , solutes{other.solutes}
+        , occupied_sites{other.occupied_sites}
+        , flag_for_identical_swap{other.flag_for_identical_swap}
+        , input{other.input}
+    {}
+
+    SimulationBox::SimulationBox(SimulationBox&& other)
+        : lattice_sites{std::move(other.lattice_sites)}
+        , solutes{std::move(other.solutes)}
+        , occupied_sites{std::move(other.occupied_sites)}
+        , flag_for_identical_swap{std::move(other.flag_for_identical_swap)}
+        , input{std::move(other.input)}
+    {
+        other.input = nullptr;
+    }
+
+    SimulationBox& SimulationBox::operator= (SimulationBox other) {
+        swap(*this, other);
+        return *this;
+    }
+
+    void swap(SimulationBox &a, SimulationBox &b) {
+        using std::swap;
+        swap(a.lattice_sites, b.lattice_sites);
+        swap(a.solutes, b.solutes);
+        swap(a.occupied_sites, b.occupied_sites);
+        swap(a.flag_for_identical_swap, b.flag_for_identical_swap);
+        swap(a.input, b.input);
+    }
 
 	void SimulationBox::generate_box(InputData* const &id) {
 		input = id;
@@ -28,6 +62,9 @@ using namespace std;
 
 		//print_site_neighbours();
 		//print_nn_fcc(2);
+
+		cout << "hey" << endl;
+
 		if (input->start_from_restart) {
 			generate_solute_from_restart();
 		} else {
@@ -288,7 +325,6 @@ using namespace std;
 		}
 	}
 
-
 	void SimulationBox::print_test_1nn_fcc() {
 		int sample_id;
 
@@ -377,6 +413,8 @@ using namespace std;
 
 	double SimulationBox::calculate_energy(LatticeSite* const &site, const int &ref_type) {
 		double total_energy = 0.0;
+
+
 		for (size_t i = 1; i < input->include_ngb.size(); ++i) {
 		    double temp = 0.0;
             if (input->include_ngb[i]) {
@@ -387,7 +425,6 @@ using namespace std;
             }
             total_energy += temp;
 		}
-
 		return 0.5*total_energy;
 	}
 

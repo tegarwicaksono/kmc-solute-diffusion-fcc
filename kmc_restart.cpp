@@ -15,7 +15,33 @@
 
 using namespace std;
 
-	Restart::Restart() {}
+	Restart::Restart() :
+	    folder_name{"dump_restart"}
+    {}
+
+	Restart::Restart(const Restart& other)
+        : box{other.box}
+        , folder_name{other.folder_name}
+    { }
+
+    Restart::Restart(Restart&& other)
+        : box{std::move(other.box)}
+        , folder_name{std::move(other.folder_name)}
+    {
+        other.box = nullptr;
+    }
+
+    Restart& Restart::operator= (Restart other) {
+        swap(*this, other);
+        return *this;
+    }
+
+    void swap(Restart& a, Restart& b) {
+        using std::swap;
+        swap(a.box, b.box);
+        swap(a.restart, b.restart);
+        swap(a.folder_name, b.folder_name);
+    }
 
 	void Restart::initialize(SimulationBox* const &kmc_box) {
 		box  = kmc_box;

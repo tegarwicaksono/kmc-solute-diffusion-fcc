@@ -13,6 +13,15 @@
 #include <vector>
 #include <string>
 #include <unordered_set>
+#include <iostream>
+#include <sstream>
+#include <cmath>
+#include <regex>
+#include <string>
+#include <fstream>
+#include <iomanip>
+#include <limits>
+#include <utility>
 
 using namespace std;
 
@@ -33,7 +42,7 @@ public:
 	//species[1] = solute 1;
 	//species[2] = solute 2;
 
-	int eff_ngb_distance, max_ngb_distance = 5;
+	int eff_ngb_distance, max_ngb_distance;
 	vector<bool>            include_ngb;
 	vector<double> 			rate_pre_exponential;		//in s^-1
 	double					rate_factor;	//minimum of rate_pre_exponential
@@ -50,9 +59,9 @@ public:
 	unsigned long long int 	final_timestep;
 	unsigned long long int 	restart_timestep;
 	unsigned long long int 	total_KMC_steps;
-	bool dump_snapshot = false;
-	bool dump_restart  = false;
-	bool start_from_restart = false;
+	bool dump_snapshot;
+	bool dump_restart;
+	bool start_from_restart;
 
 	vector<bool> include_species_in_snapshot;
 	unsigned long long int  period_snapshot;
@@ -61,6 +70,12 @@ public:
 	vector<string> parameter_name;
 
 	InputData();
+    InputData(const InputData& other);
+    InputData(InputData&& other);
+    InputData& operator= (InputData other);
+
+	virtual ~InputData() = default;
+    friend void swap(InputData &a, InputData &b);
 	void assign_parameter_name();
 	void assign_nearest_neighbour_distance();
 	vector<string> split_token(const string &input);

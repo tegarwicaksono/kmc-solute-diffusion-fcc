@@ -14,6 +14,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <utility>
 
 using namespace std;
 
@@ -23,9 +24,16 @@ public:
 
     vector<vector<vector<int> > > neighbour_list_nn;
 	ofstream 			logfile;
-	string folder_name = "log";
+	string folder_name;
 
-    Logfile() {}
+    Logfile();
+    Logfile(const Logfile& other);
+    Logfile(Logfile&& other);
+    Logfile& operator= (Logfile other);
+
+    virtual ~Logfile() = default;
+    friend void swap(Logfile &a, Logfile &b);
+
     void assign_box(SimulationBox* const &sb);
 //    void create_folder_for_logfile();
     void create_logfile_header();

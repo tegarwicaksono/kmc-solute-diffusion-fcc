@@ -8,18 +8,100 @@
 */
 
 #include "kmc_inputdata.h"
-#include <iostream>
-#include <sstream>
-#include <cmath>
-#include <regex>
-#include <string>
-#include <fstream>
-#include <iomanip>
-#include <limits>
 
 using namespace std;
 
-	InputData::InputData() : box_length(3), unit_length(3) {}
+	InputData::InputData()
+        : box_length(3)
+        , unit_length(3)
+        , max_ngb_distance(5)
+        , dump_snapshot(false)
+        , dump_restart(false)
+        , start_from_restart(false)
+    {}
+
+    InputData::InputData(const InputData& other)
+        : box_length{other.box_length}		//in unit cell
+        , unit_length{other.unit_length}		//in Angstrom
+        , number_of_solute_type{other.number_of_solute_type}
+        , abs_temperature{other.abs_temperature}		//in Kelvin
+        , kB{other.kB}                     //Boltzmann
+        , eV{other.eV}                    //eV
+        , number_of_solute_per_type{other.number_of_solute_per_type}
+        , nn_distance{other.nn_distance}
+        , species_interaction_energy{other.species_interaction_energy}	//in eV
+        , e_species{other.e_species}	//species_interaction_energy/kT
+	//species[0] = matrix;
+	//species[1] = solute 1;
+	//species[2] = solute 2;
+        , eff_ngb_distance{other.eff_ngb_distance}
+        , max_ngb_distance{other.max_ngb_distance}
+        , include_ngb{other.include_ngb}
+        , rate_pre_exponential{other.rate_pre_exponential}		//in s^-1
+        , rate_factor{other.rate_factor}//minimum of rate_pre_exponential
+        , solute_rate{other.solute_rate}	//rate_pre_exponential/rate_factor
+	//rate_pre_exponential[1] = preexp_rate for solute 1
+	//rate_pre_exponential[2] = preexp_rate for solute 2
+        , solute_migration_energy{other.solute_migration_energy}	//in eV
+        , e_migrate{other.e_migrate}	//solute_migration_energy/kT
+	//solute_migration_energy[1] = migration energy barrier for solute 1
+        , start_time{other.start_time}
+        , initial_timestep{other.initial_timestep}
+        , final_timestep{other.final_timestep}
+        , restart_timestep{other.restart_timestep}
+        , total_KMC_steps{other.total_KMC_steps}
+        , dump_snapshot{other.dump_snapshot}
+        , dump_restart{other.dump_restart}
+        , start_from_restart{other.start_from_restart}
+        , include_species_in_snapshot{other.include_species_in_snapshot}
+        , period_snapshot{other.period_snapshot}
+        , period_restart{other.period_restart}
+        , parameter_name{other.parameter_name}
+    { }
+
+    InputData::InputData(InputData&& other)
+        : box_length{std::move(other.box_length)}		//in unit cell
+        , unit_length{std::move(other.unit_length)}		//in Angstrom
+        , number_of_solute_type{std::move(other.number_of_solute_type)}
+        , abs_temperature{std::move(other.abs_temperature)}		//in Kelvin
+        , kB{std::move(other.kB)}                     //Boltzmann
+        , eV{std::move(other.eV)}                    //eV
+        , number_of_solute_per_type{std::move(other.number_of_solute_per_type)}
+        , nn_distance{std::move(other.nn_distance)}
+        , species_interaction_energy{std::move(other.species_interaction_energy)}	//in eV
+        , e_species{std::move(other.e_species)}	//species_interaction_energy/kT
+	//species[0] = matrix;
+	//species[1] = solute 1;
+	//species[2] = solute 2;
+        , eff_ngb_distance{std::move(other.eff_ngb_distance)}
+        , max_ngb_distance{std::move(other.max_ngb_distance)}
+        , include_ngb{std::move(other.include_ngb)}
+        , rate_pre_exponential{std::move(other.rate_pre_exponential)}		//in s^-1
+        , rate_factor{std::move(other.rate_factor)}//minimum of rate_pre_exponential
+        , solute_rate{std::move(other.solute_rate)}	//rate_pre_exponential/rate_factor
+	//rate_pre_exponential[1] = preexp_rate for solute 1
+	//rate_pre_exponential[2] = preexp_rate for solute 2
+        , solute_migration_energy{std::move(other.solute_migration_energy)}	//in eV
+        , e_migrate{std::move(other.e_migrate)}	//solute_migration_energy/kT
+	//solute_migration_energy[1] = migration energy barrier for solute 1
+        , start_time{std::move(other.start_time)}
+        , initial_timestep{std::move(other.initial_timestep)}
+        , final_timestep{std::move(other.final_timestep)}
+        , restart_timestep{std::move(other.restart_timestep)}
+        , total_KMC_steps{std::move(other.total_KMC_steps)}
+        , dump_snapshot{std::move(other.dump_snapshot)}
+        , dump_restart{std::move(other.dump_restart)}
+        , start_from_restart{std::move(other.start_from_restart)}
+        , include_species_in_snapshot{std::move(other.include_species_in_snapshot)}
+        , period_snapshot{std::move(other.period_snapshot)}
+        , period_restart{std::move(other.period_restart)}
+        , parameter_name{std::move(other.parameter_name)}
+    {}
+
+    InputData& InputData::operator= (InputData other) {
+        swap(*this, other);
+        return *this;
+    }
 
 	void InputData::assign_nearest_neighbour_distance() {
 	    nn_distance.assign(max_ngb_distance + 1, 0.0);
@@ -398,6 +480,12 @@ using namespace std;
 	}
 
 	void InputData::print_scaled_properties() {
+	    cout << "There are " << number_of_solute_per_type.size() << " type of solutes" << endl;
+	    for (size_t i = 0; i < number_of_solute_per_type.size(); ++i) {
+            cout << "Solute type " << i + 1 << " has " << number_of_solute_per_type[i] << " atoms" << endl;
+	    }
+	    cout << endl;
+
 		cout << "Printing scaled rate and energy terms\n\n";
 		cout << ">> Rate terms\n";
 		cout << ">> Rate factor = " << rate_factor << "\n";
@@ -428,3 +516,58 @@ using namespace std;
 			}
 		}
 	}
+
+	void swap(InputData &a, InputData &b) {
+        using std::swap;
+        swap(a.box_length, b.box_length);		//in unit cell
+        swap(a.unit_length, b.unit_length);		//in Angstrom
+        swap(a.number_of_solute_type, b.number_of_solute_type);
+
+        swap(a.abs_temperature, b.abs_temperature); 		//in Kelvin
+        swap(a.kB, b.kB);                      //Boltzmann
+        swap(a.eV, b.eV);                      //eV
+        swap(a.number_of_solute_per_type, b.number_of_solute_per_type);
+
+        swap(a.nn_distance, b.nn_distance);
+        swap(a.species_interaction_energy, b.species_interaction_energy);	//in eV
+        swap(a.e_species, b.e_species);	//species_interaction_energy/kT
+	//species[0] = matrix;
+	//species[1] = solute 1;
+	//species[2] = solute 2;
+
+        swap(a.eff_ngb_distance, b.eff_ngb_distance);
+        swap(a.max_ngb_distance, b.max_ngb_distance);
+        swap(a.include_ngb, b.include_ngb);
+        swap(a.rate_pre_exponential, b.rate_pre_exponential);		//in s^-1
+		swap(a.rate_factor, b.rate_factor);	//minimum of rate_pre_exponential
+        swap(a.solute_rate, b.solute_rate);	//rate_pre_exponential/rate_factor
+	//rate_pre_exponential[1] = preexp_rate for solute 1
+	//rate_pre_exponential[2] = preexp_rate for solute 2
+
+        swap(a.solute_migration_energy, b.solute_migration_energy);	//in eV
+        swap(a.e_migrate, b.e_migrate);	//solute_migration_energy/kT
+	//solute_migration_energy[1] = migration energy barrier for solute 1
+
+        swap(a.start_time, b.start_time);
+        swap(a.initial_timestep, b.initial_timestep);
+        swap(a.final_timestep, b.final_timestep);
+        swap(a.restart_timestep, b.restart_timestep);
+        swap(a.total_KMC_steps, b.total_KMC_steps);
+        swap(a.dump_snapshot, b.dump_snapshot);
+        swap(a.dump_restart, b.dump_restart);
+        swap(a.start_from_restart, b.start_from_restart);
+
+        swap(a.include_species_in_snapshot, b.include_species_in_snapshot);
+        swap(a.period_snapshot, b.period_snapshot);
+        swap(a.period_restart, b.period_restart);
+
+        swap(a.parameter_name,b.parameter_name);
+    }
+
+    /*
+    template<typename T>
+    void swap(T&& other, InputData& b) {
+        InputData a(std::forward<T>(other));
+        swap(a, b);
+    }
+    */

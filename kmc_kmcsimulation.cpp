@@ -19,6 +19,41 @@ using namespace std;
 
 	KMCSimulation::KMCSimulation() {}
 
+	KMCSimulation::KMCSimulation(const KMCSimulation& other)
+		: curr_time_clock{other.curr_time_clock}
+        , prev_time_clock{other.prev_time_clock}
+        , total_rate{other.total_rate}
+        , chosen_cumulative_rate{other.chosen_cumulative_rate}
+        , chosen_time_increment{other.chosen_time_increment}
+        , rates{other.rates}
+        , kmc_box{other.kmc_box}
+        , chosen_event{other.chosen_event}
+        , dump{other.dump}
+        , restart{other.restart}
+        , logfile{other.logfile}
+    { }
+
+    KMCSimulation::KMCSimulation(KMCSimulation&& other)
+        : curr_time_clock{std::move(other.curr_time_clock)}
+        , prev_time_clock{std::move(other.prev_time_clock)}
+        , total_rate{std::move(other.total_rate)}
+        , chosen_cumulative_rate{std::move(other.chosen_cumulative_rate)}
+        , chosen_time_increment{std::move(other.chosen_time_increment)}
+        , rates{std::move(other.rates)}
+        , kmc_box{std::move(other.kmc_box)}
+        , chosen_event{std::move(other.chosen_event)}
+        , dump{std::move(other.dump)}
+        , restart{std::move(other.restart)}
+        , logfile{std::move(other.logfile)}
+    {
+        other.kmc_box = nullptr;
+    }
+
+    KMCSimulation& KMCSimulation::operator= (KMCSimulation other) {
+        swap(*this, other);
+        return *this;
+    }
+
 	void KMCSimulation::print_rates() {
 		for (size_t i = 0; i < rates.size(); ++i) {
 			rates[i].print();
@@ -236,4 +271,19 @@ using namespace std;
 			check_to_produce_restart(step);
 
 		}
+	}
+
+	void swap(KMCSimulation& a, KMCSimulation& b) {
+        using std::swap;
+        swap(a.curr_time_clock, b.curr_time_clock);
+        swap(a.prev_time_clock, b.prev_time_clock);
+        swap(a.total_rate, b.total_rate);
+        swap(a.chosen_cumulative_rate, b.chosen_cumulative_rate);
+        swap(a.chosen_time_increment, b.chosen_time_increment);
+        swap(a.rates, b.rates);
+        swap(a.kmc_box, b.kmc_box);
+        swap(a.chosen_event, b.chosen_event);
+        swap(a.dump, b.dump);
+        swap(a.restart, b.restart);
+        swap(a.logfile, b.logfile);
 	}

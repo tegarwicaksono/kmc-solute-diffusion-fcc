@@ -16,6 +16,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <utility>
 
 class Snapshot {
 public:
@@ -32,6 +33,13 @@ public:
 	ofstream 				dump;
 
 	Snapshot();
+	Snapshot(const Snapshot& other);
+	Snapshot(Snapshot&& other);
+	Snapshot& operator= (Snapshot other);
+	virtual ~Snapshot() = default;
+	friend void swap(Snapshot& a, Snapshot& b);
+
+
 	void initialize(SimulationBox* const &kmc_box);
 	void update(const unsigned long long int &step);
 	//void create_folder_for_snapshot();

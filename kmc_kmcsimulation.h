@@ -17,6 +17,8 @@
 #include "kmc_restart.h"
 #include "kmc_logfile.h"
 #include <vector>
+#include <utility>
+
 
 using namespace std;
 
@@ -35,6 +37,13 @@ public:
 	Logfile         logfile;
 
 	KMCSimulation();
+
+    KMCSimulation(const KMCSimulation& other);
+    KMCSimulation& operator= (KMCSimulation other);
+    KMCSimulation(KMCSimulation&& other);
+
+    virtual ~KMCSimulation() = default;
+    friend void swap(KMCSimulation &a, KMCSimulation &b);
 
 	void print_rates();
 	void assign_simulation_box(SimulationBox* const &sb);

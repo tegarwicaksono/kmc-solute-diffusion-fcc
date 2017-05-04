@@ -15,6 +15,29 @@
 
 using namespace std;
 
+    Logfile::Logfile()
+        : folder_name{"log"}
+    {}
+
+    Logfile::Logfile(const Logfile& other)
+        : kmc_box{other.kmc_box}
+        , neighbour_list_nn{other.neighbour_list_nn}
+        , folder_name{other.folder_name}
+    {}
+
+    Logfile::Logfile(Logfile&& other)
+        : kmc_box{std::move(other.kmc_box)}
+        , neighbour_list_nn{std::move(other.neighbour_list_nn)}
+        , folder_name{std::move(other.folder_name)}
+    {
+        other.kmc_box = nullptr;
+    }
+
+    Logfile& Logfile::operator= (Logfile other) {
+        swap(*this, other);
+        return *this;
+    }
+
     void Logfile::assign_box(SimulationBox* const &sb) {
         kmc_box = sb;
     }
@@ -105,3 +128,11 @@ using namespace std;
 
         return total_energy* (kmc_box->input->kB * kmc_box->input->abs_temperature) / kmc_box->input->eV;
     }
+
+	void swap(Logfile& a, Logfile& b) {
+        using std::swap;
+        swap(a.kmc_box, b.kmc_box);
+        swap(a.neighbour_list_nn, b.neighbour_list_nn);
+        swap(a.logfile, b.logfile);
+        swap(a.folder_name, b.folder_name);
+	}

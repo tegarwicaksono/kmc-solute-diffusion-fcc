@@ -12,6 +12,7 @@
 
 #include "kmc_movingspecies.h"
 #include "kmc_rate.h"
+#include <utility>
 
 class ChosenEvent {
 public:
@@ -20,8 +21,15 @@ public:
 
 	ChosenEvent();
 	ChosenEvent(MovingSpecies* const &species, const int &direction);
+    ChosenEvent(const ChosenEvent& other);
+    ChosenEvent(ChosenEvent&& other);
+
+    ChosenEvent& operator= (ChosenEvent other);
 
 	void specify(const Rate &rate);
+    virtual ~ChosenEvent() = default;
+    friend void swap(ChosenEvent &a, ChosenEvent &b);
+
 };
 
 #endif // KMC_CHOSENEVENT_H_INCLUDED

@@ -11,6 +11,8 @@
 #define KMC_MOVINGSPECIES_H_INCLUDED
 
 #include "kmc_latticesite.h"
+#include <utility>
+
 
 using namespace std;
 
@@ -29,6 +31,12 @@ public:
 	MovingSpecies();
 	MovingSpecies(const int &type, const int &id);
 	MovingSpecies(const int &type, const int &id, LatticeSite* const &curr_location);
+    MovingSpecies(const MovingSpecies& other);
+    MovingSpecies(MovingSpecies&& other);
+    MovingSpecies& operator= (MovingSpecies other);
+
+	virtual ~MovingSpecies() = default;
+    friend void swap(MovingSpecies &a, MovingSpecies &b);
 
 	void print();
 	void print_future_energy_and_rate();

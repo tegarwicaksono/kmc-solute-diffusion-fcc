@@ -13,6 +13,7 @@
 #include "kmc_simulationbox.h"
 #include <fstream>
 #include <string>
+#include <utility>
 
 using namespace std;
 
@@ -20,9 +21,15 @@ class Restart {
 public:
 	SimulationBox* 			box;
 	ofstream 				restart;
-	string folder_name = "dump_restart";
+	string folder_name;
 
 	Restart();
+	Restart(const Restart& other);
+	Restart(Restart&& other);
+    Restart& operator= (Restart other);
+
+	virtual ~Restart() = default;
+    friend void swap(Restart &a, Restart &b);
 
 	void initialize(SimulationBox* const &kmc_box);
 //	void create_folder_for_restart();

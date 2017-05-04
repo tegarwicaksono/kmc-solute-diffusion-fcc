@@ -13,6 +13,7 @@
 #include "kmc_latticesite.h"
 #include "kmc_movingspecies.h"
 #include "kmc_inputdata.h"
+#include <utility>
 
 using namespace std;
 
@@ -26,6 +27,13 @@ public:
 	InputData* input;
 
 	SimulationBox();
+	SimulationBox(const SimulationBox& other);
+	SimulationBox(SimulationBox&& other);
+    SimulationBox& operator= (SimulationBox other);
+
+	virtual ~SimulationBox() = default;
+    friend void swap(SimulationBox &a, SimulationBox &b);
+
 	void generate_box(InputData* const &id);
 	LatticeSite* find_latt_id_fcc(const vector<double> &xyz);
 	vector<vector<double> > atoms_in_fcc_unit_cell();

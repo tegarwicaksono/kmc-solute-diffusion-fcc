@@ -15,7 +15,56 @@
 
 using namespace std;
 
-	Snapshot::Snapshot() {}
+	Snapshot::Snapshot()
+        : number_of_species_in_snapshot(0)
+        , matrix_included(false)
+        , folder_name("dump_snapshot")
+    { }
+
+    Snapshot::Snapshot(const Snapshot& other)
+        : number_of_species_in_snapshot{other.number_of_species_in_snapshot}
+        , matrix_included{other.matrix_included}
+        , folder_name{other.folder_name}
+        , box{other.box}
+        , species_to_dump{other.species_to_dump}
+        , matrix_to_dump{other.matrix_to_dump}
+        , solute_name{other.solute_name}
+        , solute_mass{other.solute_mass}
+        , box_dimension{other.box_dimension}
+    {}
+
+    Snapshot::Snapshot(Snapshot&& other)
+        : number_of_species_in_snapshot{std::move(other.number_of_species_in_snapshot)}
+        , matrix_included{std::move(other.matrix_included)}
+        , folder_name{std::move(other.folder_name)}
+        , box{std::move(other.box)}
+        , species_to_dump{std::move(other.species_to_dump)}
+        , matrix_to_dump{std::move(other.matrix_to_dump)}
+        , solute_name{std::move(other.solute_name)}
+        , solute_mass{std::move(other.solute_mass)}
+        , box_dimension{std::move(other.box_dimension)}
+    {
+        other.box = nullptr;
+    }
+
+	Snapshot& Snapshot::operator= (Snapshot other) {
+        swap(*this, other);
+        return *this;
+	}
+
+    void swap(Snapshot& a, Snapshot& b) {
+        using std::swap;
+        swap(a.number_of_species_in_snapshot, b.number_of_species_in_snapshot);
+        swap(a.matrix_included, b.matrix_included);
+        swap(a.folder_name, b.folder_name);
+        swap(a.box, b.box);
+        swap(a.species_to_dump, b.species_to_dump);
+        swap(a.matrix_to_dump, b.matrix_to_dump);
+        swap(a.solute_name, b.solute_name);
+        swap(a.solute_mass, b.solute_mass);
+        swap(a.box_dimension, b.box_dimension);
+        swap(a.dump, b.dump);
+    }
 
 	void Snapshot::initialize(SimulationBox* const &kmc_box) {
 		box  = kmc_box;
@@ -108,8 +157,6 @@ using namespace std;
 	}
 
 	void Snapshot::print_species() {
-		double kB = 1.38064852e-23;	//Boltzmann constant
-		double eV = 1.60217662e-19;	//elementary charge
 		if (matrix_included) {
 			//cout << "printing species, matrix included\n";
 			for (size_t i = 0; i < matrix_to_dump.size(); ++i) {
@@ -129,7 +176,7 @@ using namespace std;
 					dump << species_to_dump[i]->curr_location->xyz[j] / static_cast<double>(box->input->box_length[j]) << "\t";
 				}
 
-				dump << species_to_dump[i]->current_energy *(kB * box->input->abs_temperature) / eV;
+				dump << species_to_dump[i]->current_energy *(box->input->kB * box->input->abs_temperature) / (box->input->eV);
 				dump << endl;
 			}
 		}

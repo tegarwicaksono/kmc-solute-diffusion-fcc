@@ -10,6 +10,8 @@
 #ifndef KMC_RATE_H_INCLUDED
 #define KMC_RATE_H_INCLUDED
 #include "kmc_movingspecies.h"
+#include <utility>
+
 
 class Rate {
 public:
@@ -19,6 +21,13 @@ public:
 
 	Rate();
 	Rate(MovingSpecies* const &species, const int &direction);
+	Rate(const Rate& other);
+	Rate(Rate&& other);
+
+    Rate& operator= (Rate other);
+
+	virtual ~Rate() = default;
+    friend void swap(Rate &a, Rate &b);
 
 	void print();
 };
